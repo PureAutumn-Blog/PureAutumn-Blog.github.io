@@ -3,14 +3,37 @@ baseURL = "https://pureautumn-blog.github.io/"
 languageCode = "zh-cn"
 defaultContentLanguage = "zh"
 hasCJKLanguage = true
-title = "我的技术博客"
+title = "PureAutumn | 蠕动的OIer"
 theme = ["PaperMod"]
 
 [params]
-defaultTheme = "auto"
-ShowReadingTime = true
+defaultTheme = "light"
+disableThemeToggle = true
+ShowReadingTime = false
 ShowCodeCopyButtons = true
 ShowToc = true
 TocOpen = true
 ShowPostNavLinks = true
 ShowBreadCrumbs = true
+
+[params.homeInfoParams]
+Title = "我是 PureAutumn 👋"
+Content = "OI个人记录"
+
+[[menu.main]]
+identifier = "posts"
+name = "文章"
+url = "/posts/"
+weight = 10
+
+[[menu.main]]
+identifier = "categories"
+name = "分类"
+url = "/categories/"
+weight = 20
+
+[[menu.main]]
+identifier = "tags"
+name = "标签"
+url = "/tags/"
+weight = 30

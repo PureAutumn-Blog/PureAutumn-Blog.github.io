@@ -1,0 +1,1133 @@
+/* PureAutumn Liquid Glass 3.1 — Light Edition
+   Consolidated stylesheet for Hugo + PaperMod.
+   Replaces the previous liquid-glass.css in full.
+*/
+
+:root,
+html[data-theme="light"] {
+    color-scheme: light;
+
+    --theme: #f3f7fc;
+    --entry: rgba(255, 255, 255, 0.52);
+    --primary: #172b46;
+    --secondary: #63758e;
+    --tertiary: rgba(100, 151, 210, 0.12);
+    --content: #30445e;
+    --code-block-bg: #edf3fa;
+    --code-bg: rgba(255, 255, 255, 0.65);
+    --border: rgba(255, 255, 255, 0.65);
+}
+
+html {
+    min-height: 100%;
+    background: #edf4fc;
+}
+
+body {
+    min-height: 100vh;
+    color: #172b46 !important;
+    background:
+        radial-gradient(ellipse at 10% 5%, rgba(135, 190, 255, 0.55), transparent 38%),
+        radial-gradient(ellipse at 90% 18%, rgba(195, 180, 255, 0.42), transparent 36%),
+        radial-gradient(ellipse at 55% 85%, rgba(148, 224, 239, 0.35), transparent 42%),
+        linear-gradient(145deg, #f7faff, #e8f1fc 55%, #f5f1ff) fixed !important;
+}
+
+/* Keep the site layout transparent so the page background remains visible. */
+#top,
+.header,
+.main,
+.footer {
+    background: transparent !important;
+}
+
+/* Top navigation glass */
+.header {
+    padding-top: 12px;
+}
+
+.header .nav {
+    position: relative;
+    box-sizing: border-box;
+    min-height: 64px;
+    padding: 0 20px;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 23px;
+    background:
+        linear-gradient(120deg,
+            rgba(255, 255, 255, 0.88),
+            rgba(255, 255, 255, 0.43) 55%,
+            rgba(221, 235, 255, 0.55)),
+        rgba(255, 255, 255, 0.40) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(165%);
+    backdrop-filter: blur(28px) saturate(165%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        inset 0 -1px 0 rgba(177, 205, 239, 0.22),
+        0 12px 35px rgba(79, 112, 158, 0.11);
+}
+
+.logo a,
+#menu a {
+    color: #263e5c;
+    transition: color 180ms ease;
+}
+
+.logo a:hover,
+#menu a:hover {
+    color: #387bd4;
+}
+
+/* Homepage intro card */
+.first-entry {
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 28px;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.78),
+            rgba(255, 255, 255, 0.34) 55%,
+            rgba(222, 235, 255, 0.48)) !important;
+    -webkit-backdrop-filter: blur(28px) saturate(160%);
+    backdrop-filter: blur(28px) saturate(160%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.92),
+        0 18px 50px rgba(85, 119, 167, 0.11);
+}
+
+/* Post list cards */
+.post-entry {
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.82);
+    border-radius: 22px;
+    background:
+        linear-gradient(130deg,
+            rgba(255, 255, 255, 0.70),
+            rgba(255, 255, 255, 0.34) 65%,
+            rgba(230, 240, 255, 0.46)) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(155%);
+    backdrop-filter: blur(22px) saturate(155%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.90),
+        0 9px 28px rgba(83, 115, 160, 0.08);
+    transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.post-entry:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        inset 0 1px 0 #fff,
+        0 15px 38px rgba(83, 115, 160, 0.15);
+}
+
+.entry-content,
+.entry-footer,
+.post-meta {
+    color: #687b95;
+}
+
+/* Keep homepage intro, post-list titles and section headings centered. */
+.home-info .entry-header,
+.home-info .entry-content,
+.post-entry .entry-header,
+.page-header {
+    text-align: center;
+}
+
+.home-info .entry-content {
+    max-width: 680px;
+    margin-inline: auto;
+}
+
+/* Single article surface: less opaque, so the breadcrumb area does not look like a white block. */
+.post-single {
+    box-sizing: border-box;
+    min-width: 0;
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 26px;
+    background:
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.30),
+            rgba(235, 243, 255, 0.19) 58%,
+            rgba(221, 232, 255, 0.22)) !important;
+    -webkit-backdrop-filter: blur(22px) saturate(155%);
+    backdrop-filter: blur(22px) saturate(155%);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.74),
+        0 12px 35px rgba(83, 115, 160, 0.075);
+}
+
+/* Breadcrumbs: the breadcrumb is inside the article in PaperMod, so style both
+   its own surface and its parent article surface to avoid a bright white strip. */
+.post-single .breadcrumbs,
+body .main .breadcrumbs {
+    box-sizing: border-box;
+    margin-bottom: 18px !important;
+    border: 1px solid rgba(255, 255, 255, 0.30) !important;
+    border-radius: 14px !important;
+    background: linear-gradient(
+        120deg,
+        rgba(205, 225, 250, 0.10),
+        rgba(255, 255, 255, 0.08)
+    ) !important;
+    background-image: none;
+    box-shadow: none !important;
+    -webkit-backdrop-filter: blur(20px) saturate(150%);
+    backdrop-filter: blur(20px) saturate(150%);
+}
+
+/* Article heading and metadata */
+.post-single .post-header {
+    box-sizing: border-box;
+    padding-inline: clamp(24px, 4vw, 48px);
+    text-align: center !important;
+}
+
+.post-single h1.post-title.entry-hint-parent,
+.post-single .post-header .post-title {
+    display: block;
+    width: 100%;
+    max-width: none;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    text-align: center !important;
+    transform: none;
+}
+
+.post-single .post-header .post-meta {
+    text-align: center !important;
+}
+
+/* Markdown body: PDF-like inner/“binding” margins on desktop. */
+.post-single .post-content {
+    box-sizing: border-box !important;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    margin: 0 !important;
+    padding-top: 30px !important;
+    padding-right: clamp(28px, 5vw, 60px) !important;
+    padding-bottom: 44px !important;
+    padding-left: clamp(36px, 6vw, 72px) !important;
+    color: #30445e;
+    line-height: 1.85;
+    overflow-wrap: anywhere;
+}
+
+.post-content a {
+    color: #2878d4;
+    text-decoration-color: rgba(40, 120, 212, 0.35);
+    text-underline-offset: 4px;
+}
+
+.post-content a:hover {
+    color: #6556c9;
+}
+
+/* Avoid extra margins at the very beginning/end of the article body. */
+.post-single .post-content > :first-child {
+    margin-top: 0;
+}
+
+.post-single .post-content > :last-child {
+    margin-bottom: 0;
+}
+
+/* Code blocks: one outer frame, without nested white/blue boxes. */
+.post-content pre,
+.post-content div.highlight {
+    box-sizing: border-box;
+    max-width: 100%;
+    border: 1px solid #dce7f5;
+    border-radius: 15px;
+    background: #edf3fa !important;
+    color: #263e5c;
+}
+
+.post-content pre {
+    padding: 17px;
+    overflow-x: auto;
+}
+
+.post-content div.highlight .chroma,
+.post-content div.highlight pre,
+.post-content pre.chroma {
+    border: 0 !important;
+    border-radius: inherit;
+    background: transparent !important;
+    box-shadow: none !important;
+}
+
+.post-content :not(pre) > code {
+    padding: 0.15em 0.4em;
+    color: #285f9f;
+    border: 1px solid #dce8f8;
+    border-radius: 5px;
+    background: rgba(224, 237, 253, 0.75);
+}
+
+/* Table of contents, pagination and navigation surfaces */
+.toc,
+.paginav,
+.pagination a {
+    border: 1px solid rgba(255, 255, 255, 0.42);
+    border-radius: 16px;
+    background: rgba(220, 233, 250, 0.20);
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+}
+
+.toc {
+    padding: 15px 19px;
+}
+
+.terms-tags a,
+.post-tags a {
+    border: 1px solid rgba(255, 255, 255, 0.72);
+    border-radius: 999px;
+    background: rgba(225, 237, 252, 0.36);
+    color: #38618f;
+}
+
+.terms-tags a:hover,
+.post-tags a:hover {
+    background: rgba(210, 229, 255, 0.72);
+}
+
+/* Quotes and images */
+.post-content blockquote {
+    border-inline-start: 3px solid #82b8f4;
+    border-radius: 0 12px 12px 0;
+    background: rgba(221, 236, 255, 0.48);
+    padding: 12px 18px;
+}
+
+.post-content img {
+    box-sizing: border-box;
+    max-width: 100%;
+    height: auto;
+    border: 1px solid rgba(255, 255, 255, 0.78);
+    border-radius: 15px;
+    box-shadow: 0 10px 30px rgba(83, 115, 160, 0.10);
+}
+
+/* Tables and other wide Markdown elements should not break the page width. */
+.post-content table,
+.post-content iframe,
+.post-content video,
+.post-content .highlight {
+    max-width: 100%;
+}
+
+.post-content table {
+    display: block;
+    overflow-x: auto;
+}
+
+/* Footer and back-to-top button */
+.footer {
+    color: #71839a;
+}
+
+#top-link {
+    border: 1px solid rgba(255, 255, 255, 0.76);
+    border-radius: 14px;
+    background: rgba(225, 237, 252, 0.48);
+    color: #30445e;
+    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(18px);
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+    .header {
+        padding-top: 6px;
+    }
+
+    .header .nav {
+        min-height: 58px;
+        padding: 0 12px;
+        border-radius: 18px;
+    }
+
+    .first-entry {
+        border-radius: 22px;
+    }
+
+    .post-entry {
+        border-radius: 18px;
+    }
+
+    .post-single {
+        border-radius: 20px;
+    }
+
+    .post-single .post-header {
+        padding-inline: 20px;
+    }
+
+    .post-single .post-content {
+        padding: 22px 18px 30px !important;
+    }
+
+    .post-content pre {
+        padding: 13px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+
+    .post-entry:hover {
+        transform: none;
+    }
+}
+
+/* 最终微调：淡化面包屑和文章卡片的白色边线 */
+body .main .breadcrumbs,
+body .post-single .breadcrumbs {
+    border-color: rgba(255, 255, 255, 0.06) !important;
+    outline: none !important;
+    box-shadow: none !important;
+    background: rgba(210, 229, 250, 0.06) !important;
+}
+
+/* 文章卡片：保留玻璃轮廓，但减弱白色描边与顶部高光 */
+body .post-single {
+    border-color: rgba(255, 255, 255, 0.25) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.22),
+        0 12px 35px rgba(83, 115, 160, 0.06) !important;
+}
+
+/* 避免伪元素额外绘制白线 */
+body .main .breadcrumbs::before,
+body .main .breadcrumbs::after {
+    border-color: transparent !important;
+    box-shadow: none !important;
+}
+
+/* =========================================
+   PureAutumn：鼠标交互式液态背景
+   光影跟随鼠标 + 轻微视差
+   ========================================= */
+
+body {
+    position: relative;
+    isolation: isolate;
+    background: transparent !important;
+}
+
+/* 独立背景层：不会挡住链接和鼠标操作 */
+body::before {
+    content: "";
+    position: fixed;
+    inset: -24px;
+    z-index: -1;
+    pointer-events: none;
+
+    background:
+        radial-gradient(
+            circle 520px at
+                var(--pa-pointer-x, 50%)
+                var(--pa-pointer-y, 35%),
+            rgba(255, 255, 255, 0.48) 0%,
+            rgba(143, 190, 255, 0.20) 34%,
+            transparent 72%
+        ),
+        radial-gradient(
+            ellipse at
+                calc(12% + var(--pa-shift-x, 0px))
+                calc(8% + var(--pa-shift-y, 0px)),
+            rgba(135, 190, 255, 0.34),
+            transparent 40%
+        ),
+        radial-gradient(
+            ellipse at 90% 18%,
+            rgba(195, 180, 255, 0.27),
+            transparent 36%
+        ),
+        radial-gradient(
+            ellipse at 55% 85%,
+            rgba(148, 224, 239, 0.24),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(247, 250, 255, 0.25),
+            rgba(232, 241, 252, 0.32) 55%,
+            rgba(245, 241, 255, 0.28)
+        ),
+        url("/images/background.jpg");
+
+    background-position:
+        center, center, center, center, center, center;
+
+    background-size:
+        auto, auto, auto, auto, auto, cover;
+
+    background-repeat: no-repeat;
+
+    transform: translate3d(
+        calc(0px - var(--pa-shift-x, 0px)),
+        calc(0px - var(--pa-shift-y, 0px)),
+        0
+    ) scale(1.04);
+
+    will-change: transform;
+}
+
+/* 手机端减少背景位移，避免影响滚动体验 */
+@media (max-width: 768px) {
+    body::before {
+        transform: none;
+        will-change: auto;
+    }
+}
+
+/* 尊重系统的动态效果偏好 */
+@media (prefers-reduced-motion: reduce) {
+    body::before {
+        transform: none;
+        will-change: auto;
+    }
+}
+
+/* 流动光晕画布：位于内容和玻璃卡片下方 */
+#pa-flow-background {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    pointer-events: none !important;
+    z-index: 0 !important;
+}
+
+/* 将主要页面内容放在动态光晕上面 */
+.header,
+.main,
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+#top-link {
+    z-index: 5;
+}
+
+/* 背景本身保持静态，避免出现第二个跟随鼠标的光圈 */
+body::before {
+    inset: 0 !important;
+    transform: none !important;
+    background:
+        radial-gradient(
+            ellipse at 12% 8%,
+            rgba(135, 190, 255, 0.30),
+            transparent 40%
+        ),
+        radial-gradient(
+            ellipse at 90% 18%,
+            rgba(195, 180, 255, 0.24),
+            transparent 36%
+        ),
+        radial-gradient(
+            ellipse at 55% 85%,
+            rgba(148, 224, 239, 0.20),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            rgba(247, 250, 255, 0.24),
+            rgba(232, 241, 252, 0.30),
+            rgba(245, 241, 255, 0.25)
+        ),
+        url("/images/background.jpg") center center / cover no-repeat fixed
+        !important;
+}
+
+@media (max-width: 768px) {
+    body::before {
+        background-attachment: scroll !important;
+    }
+}
+
+/* PureAutumn：淡蓝色底层 + 深蓝液体交互 */
+html,
+html[data-theme="light"] {
+    min-height: 100%;
+    background-color: #eaf4ff !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 15% 12%,
+            rgba(183, 211, 255, 0.50),
+            transparent 43%
+        ),
+        radial-gradient(
+            ellipse at 85% 25%,
+            rgba(215, 211, 255, 0.34),
+            transparent 42%
+        ),
+        linear-gradient(
+            145deg,
+            #edf6ff,
+            #e5f0ff 58%,
+            #f0efff
+        ) !important;
+
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+}
+
+/* 流体画布透明区域显示下方的淡蓝色 */
+body {
+    background: transparent !important;
+}
+
+/* 关闭旧版鼠标渐变层，避免与流体叠加 */
+body::before {
+    display: none !important;
+    content: none !important;
+}
+
+/* 内容和玻璃卡片继续位于流体上方 */
+.header,
+.main,
+.footer {
+    position: relative;
+    z-index: 1;
+}
+
+#top-link {
+    z-index: 5;
+}
+
+@media (max-width: 768px) {
+    html,
+    html[data-theme="light"] {
+        background-attachment: scroll !important;
+    }
+}
+/* 流体：保留蓝色，提高彩度，不做灰度处理 */
+body canvas {
+    filter: invert(1) hue-rotate(180deg) saturate(2.4) !important;
+    mix-blend-mode: multiply !important;
+    opacity: 0.48 !important;
+}
+
+/* 背景：更偏淡蓝，减少液体与底色的反差 */
+html,
+html[data-theme="light"] {
+    background-color: #e4f0ff !important;
+    background-image:
+        radial-gradient(
+            ellipse at 17% 12%,
+            rgba(151, 195, 255, 0.36),
+            transparent 48%
+        ),
+        radial-gradient(
+            ellipse at 84% 27%,
+            rgba(177, 197, 255, 0.23),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #e8f3ff 0%,
+            #e2eeff 56%,
+            #e9edff 100%
+        ) !important;
+    background-repeat: no-repeat !important;
+    background-position: center !important;
+    background-size: cover !important;
+    background-attachment: fixed !important;
+}
+
+body {
+    background: transparent !important;
+}
+
+/* 固定刚才验证成功的蓝色映射 */
+body canvas {
+    filter: url("#pa-fluid-blue-tint") !important;
+    mix-blend-mode: multiply !important;
+    opacity: 0.50 !important;
+}
+
+@media (max-width: 768px) {
+    html,
+    html[data-theme="light"] {
+        background-attachment: scroll !important;
+    }
+}
+
+/* PureAutumn：加深底色，保留浅蓝液态玻璃风格 */
+html,
+html[data-theme="light"] {
+    background-color: #d9e7f9 !important;
+
+    background-image:
+        radial-gradient(
+            ellipse at 16% 12%,
+            rgba(140, 184, 246, 0.42),
+            transparent 48%
+        ),
+        radial-gradient(
+            ellipse at 84% 27%,
+            rgba(168, 177, 240, 0.28),
+            transparent 45%
+        ),
+        linear-gradient(
+            145deg,
+            #dfecfb 0%,
+            #d4e3f8 56%,
+            #e0e3fa 100%
+        ) !important;
+}
+
+/* 紫色点击液体：与蓝色流体共处背景层 */
+body canvas#pa-click-fluid {
+    position: fixed !important;
+    inset: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: -1 !important;
+    pointer-events: none !important;
+    background: transparent !important;
+    filter: none !important;
+    mix-blend-mode: multiply !important;
+    opacity: 1 !important;
+}
+
+/* 点击液体与烟花：保留原始紫色和彩色，不套用蓝色滤镜 */
+body canvas#pa-click-fluid {
+    filter: none !important;
+    mix-blend-mode: normal !important;
+    opacity: 1 !important;
+}
+
+/* PureAutumn：冰蓝色液态玻璃鼠标 */
+html,
+body,
+body * {
+    cursor: url("/images/liquid-glass-cursor.svg") 4 3, auto !important;
+}
+
+/* 可点击元素仍然显示标准手形，保持交互提示 */
+body a,
+body button,
+body [role="button"],
+body input[type="button"],
+body input[type="submit"],
+body summary {
+    cursor: pointer !important;
+}
+
+/* 输入文字时保留文本光标 */
+body input:not([type="button"]):not([type="submit"]):not([type="checkbox"]):not([type="radio"]),
+body textarea,
+body [contenteditable="true"] {
+    cursor: text !important;
+}
+
+/* ========================================
+   PureAutumn — 蓝色呼吸光点鼠标
+   ======================================== */
+
+#pa-pulsing-cursor {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 14px;
+    height: 14px;
+    z-index: 2147483647;
+    pointer-events: none;
+    opacity: 0;
+    transform: translate(-50%, -50%);
+    transition: opacity 180ms ease;
+    contain: layout style;
+}
+
+#pa-pulsing-cursor.is-visible {
+    opacity: 1;
+}
+
+/* 外层柔和光晕：半径慢慢变化 */
+#pa-pulsing-cursor .pa-cursor-aura {
+    position: absolute;
+    inset: -13px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        rgba(96, 165, 250, 0.23) 0%,
+        rgba(96, 165, 250, 0.13) 38%,
+        rgba(125, 180, 255, 0.05) 63%,
+        transparent 76%
+    );
+    animation: pa-cursor-breathe 1.65s ease-in-out infinite;
+    will-change: transform, opacity;
+}
+
+/* 中间的细蓝色玻璃圆环 */
+#pa-pulsing-cursor .pa-cursor-ring {
+    position: absolute;
+    inset: -2px;
+    border: 1px solid rgba(100, 170, 255, 0.42);
+    border-radius: 50%;
+    box-shadow: inset 0 0 3px rgba(255, 255, 255, 0.7);
+    animation: pa-cursor-ring-pulse 1.65s ease-in-out infinite;
+}
+
+/* 中心蓝点 */
+#pa-pulsing-cursor .pa-cursor-core {
+    position: absolute;
+    inset: 3px;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle at 32% 27%,
+        #ffffff 0%,
+        #d8edff 18%,
+        #8bc5ff 48%,
+        #5198f1 78%,
+        #4386e0 100%
+    );
+    box-shadow:
+        0 0 4px rgba(74, 151, 248, 0.42),
+        0 0 10px rgba(74, 151, 248, 0.25),
+        inset 0 1px 1px rgba(255, 255, 255, 0.9);
+    animation: pa-cursor-core-pulse 1.65s ease-in-out infinite;
+    will-change: transform;
+}
+
+/* 光晕缓慢呼吸 */
+@keyframes pa-cursor-breathe {
+    0%, 100% {
+        transform: scale(0.78);
+        opacity: 0.58;
+    }
+    50% {
+        transform: scale(1.24);
+        opacity: 1;
+    }
+}
+
+@keyframes pa-cursor-ring-pulse {
+    0%, 100% {
+        transform: scale(0.88);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.16);
+        opacity: 0.95;
+    }
+}
+
+/* 核心圆点轻微变大、缩小 */
+@keyframes pa-cursor-core-pulse {
+    0%, 100% {
+        transform: scale(0.84);
+    }
+    50% {
+        transform: scale(1.18);
+    }
+}
+
+/* 悬停可点击元素：整体变得明显一点 */
+#pa-pulsing-cursor.is-hovering .pa-cursor-aura {
+    opacity: 1;
+    animation-duration: 1.1s;
+}
+
+#pa-pulsing-cursor.is-hovering .pa-cursor-core {
+    background: radial-gradient(
+        circle at 30% 25%,
+        #ffffff 0%,
+        #d6ecff 16%,
+        #79baff 48%,
+        #4288e6 100%
+    );
+}
+
+/* 点击瞬间轻微收缩 */
+#pa-pulsing-cursor.is-clicking .pa-cursor-core {
+    transform: scale(0.68);
+}
+
+/* 桌面端隐藏系统箭头，显示自定义蓝色光点 */
+@media (hover: hover) and (pointer: fine) {
+    html,
+    body,
+    body * {
+        cursor: none !important;
+    }
+
+    input,
+    textarea,
+    [contenteditable="true"] {
+        cursor: text !important;
+    }
+}
+
+/* 手机端不显示自定义鼠标 */
+@media (hover: none), (pointer: coarse) {
+    #pa-pulsing-cursor {
+        display: none !important;
+    }
+}
+
+/* 尊重系统减少动态效果设置 */
+@media (prefers-reduced-motion: reduce) {
+    #pa-pulsing-cursor .pa-cursor-aura,
+    #pa-pulsing-cursor .pa-cursor-ring,
+    #pa-pulsing-cursor .pa-cursor-core {
+        animation: none !important;
+    }
+}
+
+/* 鼠标按住：蓝色液态光点膨胀 */
+#pa-pulsing-cursor.is-clicking .pa-cursor-core {
+    animation: pa-cursor-core-hold 180ms ease-out forwards !important;
+}
+
+#pa-pulsing-cursor.is-clicking .pa-cursor-ring {
+    animation: pa-cursor-ring-hold 180ms ease-out forwards !important;
+}
+
+#pa-pulsing-cursor.is-clicking .pa-cursor-aura {
+    animation: pa-cursor-aura-hold 220ms ease-out forwards !important;
+}
+
+/* 中心蓝点明显鼓起 */
+@keyframes pa-cursor-core-hold {
+    from {
+        transform: scale(1);
+    }
+    to {
+        transform: scale(1.65);
+    }
+}
+
+/* 玻璃圆环同步扩张 */
+@keyframes pa-cursor-ring-hold {
+    from {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1.55);
+        opacity: 1;
+    }
+}
+
+/* 外层光晕向外膨胀 */
+@keyframes pa-cursor-aura-hold {
+    from {
+        transform: scale(1);
+        opacity: 0.7;
+    }
+    to {
+        transform: scale(1.5);
+        opacity: 1;
+    }
+}
+
+/* ========================================
+   PureAutumn — 随机冰蓝流星
+   ======================================== */
+
+.pa-shooting-star {
+    position: fixed;
+    z-index: 99999;
+    width: 220px;
+    height: 2px;
+    border-radius: 999px;
+    pointer-events: none;
+
+    /* 流星头部亮，尾部渐渐透明 */
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 255, 0.98) 0%,
+        rgba(188, 222, 255, 0.90) 15%,
+        rgba(121, 185, 255, 0.52) 48%,
+        rgba(111, 171, 255, 0.15) 76%,
+        transparent 100%
+    );
+
+    box-shadow:
+        0 0 5px rgba(199, 226, 255, 0.68),
+        0 0 13px rgba(105, 169, 255, 0.24);
+
+    transform-origin: left center;
+    animation:
+        pa-shooting-star-flight
+        var(--pa-star-duration, 1200ms)
+        cubic-bezier(0.12, 0.68, 0.2, 1)
+        forwards;
+    will-change: transform, opacity;
+}
+
+/* 流星头部的小亮点 */
+.pa-shooting-star::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: #ffffff;
+    box-shadow:
+        0 0 4px #ffffff,
+        0 0 9px rgba(134, 195, 255, 0.95);
+    transform: translate(-50%, -50%);
+}
+
+@keyframes pa-shooting-star-flight {
+    0% {
+        opacity: 0;
+        transform: translate3d(0, 0, 0) rotate(-35deg) scaleX(0.65);
+    }
+
+    12% {
+        opacity: 0.95;
+        transform: translate3d(0, 0, 0) rotate(-35deg) scaleX(1);
+    }
+
+    75% {
+        opacity: 0.78;
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate3d(
+            var(--pa-star-dx, -360px),
+            var(--pa-star-dy, 200px),
+            0
+        ) rotate(-35deg) scaleX(0.8);
+    }
+}
+
+/* 降低动态效果偏好 */
+@media (prefers-reduced-motion: reduce) {
+    .pa-shooting-star {
+        display: none !important;
+        animation: none !important;
+    }
+}
+
+/* PureAutumn — 明亮的金黄色流星 */
+.pa-shooting-star {
+    width: 320px !important;
+    height: 5px !important;
+    border-radius: 999px !important;
+
+    background: linear-gradient(
+        90deg,
+        rgba(255, 255, 230, 1) 0%,
+        rgba(255, 244, 166, 1) 10%,
+        rgba(255, 211, 76, 0.98) 28%,
+        rgba(255, 178, 40, 0.78) 52%,
+        rgba(255, 151, 35, 0.38) 76%,
+        rgba(255, 183, 70, 0) 100%
+    ) !important;
+
+    box-shadow:
+        0 0 5px rgba(255, 252, 215, 1),
+        0 0 12px rgba(255, 212, 74, 0.95),
+        0 0 26px rgba(255, 174, 44, 0.65),
+        0 0 42px rgba(255, 196, 82, 0.30) !important;
+}
+
+/* 流星头部：明亮的金白色核心 */
+.pa-shooting-star::before {
+    width: 8px !important;
+    height: 8px !important;
+    border-radius: 50% !important;
+
+    background: #fffde7 !important;
+
+    box-shadow:
+        0 0 5px 2px rgba(255, 255, 225, 1),
+        0 0 12px 5px rgba(255, 224, 105, 0.95),
+        0 0 24px 8px rgba(255, 173, 48, 0.65) !important;
+}
+/* 自然抛物线流星：头部在前，金色尾焰向后延伸 */
+.pa-shooting-star {
+    position: fixed !important;
+    z-index: 99999 !important;
+    width: var(--pa-star-length, 360px) !important;
+    height: 6px !important;
+    box-sizing: border-box;
+    border: 0 !important;
+    border-radius: 999px !important;
+    pointer-events: none !important;
+
+    /* 左端是尾部，右端是前方的亮核 */
+    background: linear-gradient(
+        90deg,
+        transparent 0%,
+        rgba(255, 160, 25, 0.06) 18%,
+        rgba(255, 174, 35, 0.25) 42%,
+        rgba(255, 190, 45, 0.68) 68%,
+        rgba(255, 220, 105, 0.96) 88%,
+        #fffde7 100%
+    ) !important;
+
+    box-shadow:
+        0 0 5px rgba(255, 212, 80, 0.76),
+        0 0 13px rgba(255, 174, 35, 0.45),
+        0 0 24px rgba(255, 190, 70, 0.22) !important;
+
+    transform-origin: 100% 50% !important;
+
+    /* 动画由 JavaScript 控制，禁止旧的直线关键帧覆盖 */
+    animation: none !important;
+    will-change: left, top, transform, opacity;
+}
+
+/* 流星头部：始终位于轨迹的前端 */
+.pa-shooting-star::before {
+    content: "" !important;
+    position: absolute !important;
+    left: auto !important;
+    right: -3px !important;
+    top: 50% !important;
+
+    width: 8px !important;
+    height: 8px !important;
+    border: none !important;
+    border-radius: 50% !important;
+    transform: translateY(-50%) !important;
+
+    background: #fffde7 !important;
+    box-shadow:
+        0 0 4px 1px rgba(255, 255, 225, 1),
+        0 0 11px 4px rgba(255, 219, 100, 0.95),
+        0 0 20px 6px rgba(255, 166, 40, 0.42) !important;
+}
+
+
+/* ========================================
+   PureAutumn — 冰蓝色文字选区
+   ======================================== */
+
+::selection {
+    color: #173b66;
+    background-color: rgba(119, 180, 255, 0.43);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.38);
+}
+
+/* Firefox 兼容 */
+::-moz-selection {
+    color: #173b66;
+    background-color: rgba(119, 180, 255, 0.43);
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.38);
+}
