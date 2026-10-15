@@ -1,0 +1,16 @@
+baseURL = "https://pureautumn-blog.github.io/"
+
+languageCode = "zh-cn"
+defaultContentLanguage = "zh"
+hasCJKLanguage = true
+title = "我的技术博客"
+theme = ["PaperMod"]
+
+[params]
+defaultTheme = "auto"
+ShowReadingTime = true
+ShowCodeCopyButtons = true
+ShowToc = true
+TocOpen = true
+ShowPostNavLinks = true
+ShowBreadCrumbs = true
