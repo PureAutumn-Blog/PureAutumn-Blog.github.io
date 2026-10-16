@@ -1,0 +1,98 @@
+﻿/* PureAutumn — component-level liquid-glass hover layer
+   Add-on only: does not replace the site's primary stylesheet. */
+
+@media (hover: hover) and (pointer: fine) {
+    .pa-liquid-glass-target {
+        --pa-lg-x: 50%;
+        --pa-lg-y: 35%;
+        position: relative;
+        isolation: isolate;
+    }
+
+    .pa-liquid-glass-target::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: -1;
+        border-radius: inherit;
+        pointer-events: none;
+        opacity: 0;
+        background:
+            radial-gradient(
+                ellipse 72% 78% at var(--pa-lg-x) var(--pa-lg-y),
+                rgba(255, 255, 255, 0.52) 0%,
+                rgba(222, 239, 255, 0.24) 27%,
+                rgba(139, 190, 255, 0.09) 48%,
+                transparent 74%
+            ),
+            linear-gradient(
+                128deg,
+                rgba(255, 255, 255, 0.20) 0%,
+                transparent 38%,
+                transparent 72%,
+                rgba(121, 174, 248, 0.10) 100%
+            );
+        box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.24);
+        transition: opacity 180ms ease;
+    }
+
+    .pa-liquid-glass-target::after {
+        content: "";
+        position: absolute;
+        inset: 0;
+        z-index: 2;
+        border: 1px solid rgba(255, 255, 255, 0.48);
+        border-radius: inherit;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.38),
+            inset 0 -1px 0 rgba(117, 166, 230, 0.08);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 180ms ease;
+    }
+
+    .pa-liquid-glass-target.pa-lg-hover::before,
+    .pa-liquid-glass-target.pa-lg-hover::after {
+        opacity: 1;
+    }
+
+    .pa-liquid-glass-target.pa-lg-hover {
+        -webkit-backdrop-filter: blur(26px) saturate(180%) contrast(1.035);
+        backdrop-filter: blur(26px) saturate(180%) contrast(1.035);
+    }
+
+    .post-entry.pa-lg-hover {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.88),
+            0 15px 38px rgba(83, 115, 160, 0.15),
+            0 0 0 1px rgba(255, 255, 255, 0.16);
+    }
+
+    .first-entry.pa-lg-hover,
+    .post-single.pa-lg-hover {
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.80),
+            0 18px 46px rgba(83, 115, 160, 0.12);
+    }
+
+    .post-tags a.pa-lg-hover,
+    .terms-tags a.pa-lg-hover,
+    .pagination a.pa-lg-hover,
+    .paginav.pa-lg-hover,
+    .toc.pa-lg-hover,
+    .post-content .luogu-callout.pa-lg-hover,
+    .post-content blockquote.pa-lg-hover,
+    .post-content .highlight.pa-lg-hover,
+    .post-content > pre.pa-lg-hover,
+    .breadcrumbs.pa-lg-hover,
+    #top-link.pa-lg-hover {
+        border-color: rgba(255, 255, 255, 0.72) !important;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .pa-liquid-glass-target::before,
+    .pa-liquid-glass-target::after {
+        transition: none !important;
+    }
+}
