@@ -1,0 +1,82 @@
+/* iOS-style transparent liquid glass; no overlay elements */
+
+.post-entry,
+.post-entry.lg26-glass-target {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.13) 0%,
+            rgba(255, 255, 255, 0.045) 48%,
+            rgba(170, 205, 255, 0.075) 100%
+        ) !important;
+
+    -webkit-backdrop-filter:
+        blur(28px) saturate(1.8) contrast(1.06) !important;
+    backdrop-filter:
+        blur(28px) saturate(1.8) contrast(1.06) !important;
+
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    border-radius: 22px !important;
+
+    box-shadow:
+        0 8px 30px rgba(25, 45, 75, 0.10),
+        inset 0 1px 0 rgba(255, 255, 255, 0.58),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08) !important;
+
+    transition:
+        background 180ms ease,
+        box-shadow 220ms ease,
+        border-color 220ms ease,
+        transform 220ms ease !important;
+}
+
+.post-entry:hover,
+.post-entry.lg26-glass-target:hover {
+    background:
+        radial-gradient(
+            300px circle at var(--lg26-pointer-x, 50%) var(--lg26-pointer-y, 50%),
+            rgba(255, 255, 255, 0.25),
+            rgba(255, 255, 255, 0) 75%
+        ),
+        linear-gradient(
+            135deg,
+            rgba(255, 255, 255, 0.15) 0%,
+            rgba(255, 255, 255, 0.05) 48%,
+            rgba(170, 205, 255, 0.09) 100%
+        ) !important;
+
+    border-color: rgba(255, 255, 255, 0.68) !important;
+
+    box-shadow:
+        0 12px 36px rgba(25, 45, 75, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78) !important;
+
+    transform: translateY(-2px) !important;
+}
+
+html[data-theme="dark"] .post-entry,
+html[data-theme="dark"] .post-entry.lg26-glass-target {
+    background:
+        linear-gradient(
+            135deg,
+            rgba(210, 230, 255, 0.105),
+            rgba(160, 195, 245, 0.035) 55%,
+            rgba(120, 160, 220, 0.065)
+        ) !important;
+
+    border-color: rgba(225, 238, 255, 0.24) !important;
+
+    box-shadow:
+        0 10px 34px rgba(0, 0, 0, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.24) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry,
+    .post-entry:hover,
+    .post-entry.lg26-glass-target,
+    .post-entry.lg26-glass-target:hover {
+        transition: none !important;
+        transform: none !important;
+    }
+}

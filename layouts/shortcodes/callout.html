@@ -1,0 +1,17 @@
+
+{{- $type := .Get "type" | default "info" -}}
+{{- $title := .Get "title" | default "" -}}
+{{- $open := eq (.Get "open") "true" -}}
+{{- $allowed := slice "info" "success" "warning" "error" -}}
+{{- if not (in $allowed $type) -}}
+    {{- $type = "info" -}}
+{{- end -}}
+<details class="luogu-callout luogu-callout--{{ $type }}"{{ if $open }} open{{ end }}>
+<summary class="luogu-callout__title">{{ $title }}</summary>
+
+<div class="luogu-callout__body">
+
+{{ .Inner }}
+
+</div>
+</details>

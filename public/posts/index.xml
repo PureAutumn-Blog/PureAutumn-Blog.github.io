@@ -1,20 +1,56 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
   <channel>
-    <title>Posts on 我的技术博客</title>
+    <title>Posts on PureAutumn | 蠕动的OIer</title>
     <link>http://localhost:1313/posts/</link>
-    <description>Recent content in Posts on 我的技术博客</description>
+    <description>Recent content in Posts on PureAutumn | 蠕动的OIer</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 15 Oct 2026 16:00:00 +0800</lastBuildDate>
+    <lastBuildDate>Thu, 15 Oct 2026 23:30:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>洛谷 Markdown 兼容性测试</title>
+      <link>http://localhost:1313/posts/luogu-render-test/</link>
+      <pubDate>Thu, 15 Oct 2026 23:30:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/luogu-render-test/</guid>
+      <description>&lt;h1 id=&#34;洛谷-markdown-测试&#34;&gt;洛谷 Markdown 测试&lt;/h1&gt;
+&lt;p&gt;这是一段普通文字，支持 &lt;strong&gt;加粗&lt;/strong&gt;、&lt;del&gt;删除线&lt;/del&gt;、&lt;code&gt;行内代码&lt;/code&gt; 和行内公式 \(a^2+b^2=c^2\)。&lt;/p&gt;
+&lt;h2 id=&#34;1-信息框&#34;&gt;1. 信息框&lt;/h2&gt;
+&lt;details class=&#34;luogu-callout luogu-callout--info&#34; open&gt;
+&lt;summary class=&#34;luogu-callout__title&#34;&gt;信息测试&lt;/summary&gt;
+&lt;div class=&#34;luogu-callout__body&#34;&gt;
+&lt;p&gt;这是一段信息提示文字。&lt;/p&gt;
+&lt;details class=&#34;luogu-callout luogu-callout--success&#34; open&gt;
+&lt;summary class=&#34;luogu-callout__title&#34;&gt;嵌套成功框&lt;/summary&gt;
+&lt;div class=&#34;luogu-callout__body&#34;&gt;
+&lt;p&gt;嵌套内容也应该正常显示。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;/div&gt;
+&lt;/details&gt;
+&lt;h2 id=&#34;2-警告与错误框&#34;&gt;2. 警告与错误框&lt;/h2&gt;
+&lt;details class=&#34;luogu-callout luogu-callout--warning&#34;&gt;
+&lt;summary class=&#34;luogu-callout__title&#34;&gt;警告测试&lt;/summary&gt;
+&lt;div class=&#34;luogu-callout__body&#34;&gt;
+&lt;p&gt;请注意，这里应该出现警告样式。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/details&gt;</description>
+    </item>
     <item>
       <title>我的第一篇博客</title>
       <link>http://localhost:1313/posts/hello-world/</link>
       <pubDate>Thu, 15 Oct 2026 16:00:00 +0800</pubDate>
       <guid>http://localhost:1313/posts/hello-world/</guid>
       <description>&lt;p&gt;你好，世界！&lt;/p&gt;
-&lt;p&gt;这是我的第一篇 Hugo 博客文章。&lt;/p&gt;</description>
+&lt;p&gt;这是我的第一篇 Hugo 博客文章。&lt;/p&gt;
+&lt;p&gt;独立公式测试：&lt;/p&gt;
+$$
+\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
+$$&lt;p&gt;另一个公式：&lt;/p&gt;
+\[
+dp_i = \min_{1 \le j &lt; i}
+\left(dp_j + a_i\right)
+\]</description>
     </item>
   </channel>
 </rss>

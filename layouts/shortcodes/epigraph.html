@@ -1,0 +1,12 @@
+
+{{- $author := .Get "author" | default "" -}}
+<figure class="luogu-epigraph">
+<blockquote>
+
+{{ .Inner }}
+
+</blockquote>
+{{ if $author }}
+<figcaption>{{ $author }}</figcaption>
+{{ end }}
+</figure>

@@ -1,0 +1,156 @@
+/* LIQUID_GLASS_IOS26_V1 — additive enhancement; original liquid-glass.css is untouched. */
+/* Scoped to PaperMod UI cards. Code blocks, tables, article body and navigation are deliberately excluded. */
+
+.lg26-glass-target {
+    position: relative;
+    isolation: isolate;
+    --lg26-x: 50%;
+    --lg26-y: 16%;
+    border: 1px solid rgba(255, 255, 255, 0.36) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.58),
+        inset 0 -1px 0 rgba(142, 197, 255, 0.20),
+        0 12px 34px rgba(39, 76, 128, 0.12);
+    -webkit-backdrop-filter: blur(22px) saturate(1.85) contrast(1.08);
+    backdrop-filter: blur(22px) saturate(1.85) contrast(1.08);
+    transition:
+        transform 240ms cubic-bezier(.2, .75, .25, 1),
+        box-shadow 240ms ease,
+        border-color 240ms ease;
+}
+
+/* Real displacement is enabled by JS on desktop Chromium only. Other browsers keep the CSS glass fallback. */
+html.lg26-svg-refraction-ready .lg26-glass-target {
+    backdrop-filter: url("#lg26-liquid-refraction") blur(22px) saturate(1.85) contrast(1.08);
+}
+
+.lg26-glass-target > .lg26-specular-layer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    display: block;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0.38;
+    background:
+        radial-gradient(
+            300px circle at var(--lg26-x) var(--lg26-y),
+            rgba(255, 255, 255, 0.64) 0%,
+            rgba(205, 232, 255, 0.28) 18%,
+            rgba(255, 255, 255, 0.10) 38%,
+            transparent 72%
+        ),
+        linear-gradient(
+            128deg,
+            rgba(255, 255, 255, 0.30) 0%,
+            rgba(255, 255, 255, 0.06) 22%,
+            transparent 43%,
+            transparent 72%,
+            rgba(133, 194, 255, 0.13) 100%
+        );
+    transition: opacity 220ms ease;
+}
+
+.lg26-glass-target > :not(.lg26-specular-layer) {
+    position: relative;
+    z-index: 1;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .lg26-glass-target.lg26-is-active {
+        transform: translateY(-2px);
+        border-color: rgba(255, 255, 255, 0.62) !important;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.78),
+            inset 0 -1px 0 rgba(142, 197, 255, 0.30),
+            0 18px 42px rgba(39, 76, 128, 0.17),
+            0 0 0 1px rgba(185, 220, 255, 0.12);
+    }
+
+    .lg26-glass-target.lg26-is-active > .lg26-specular-layer {
+        opacity: 0.92;
+    }
+}
+
+body.dark .lg26-glass-target,
+html[data-theme="dark"] .lg26-glass-target {
+    border-color: rgba(199, 224, 255, 0.24) !important;
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.24),
+        inset 0 -1px 0 rgba(100, 170, 255, 0.20),
+        0 14px 36px rgba(0, 0, 0, 0.20);
+}
+
+body.dark .lg26-glass-target > .lg26-specular-layer,
+html[data-theme="dark"] .lg26-glass-target > .lg26-specular-layer {
+    opacity: 0.30;
+    background:
+        radial-gradient(
+            300px circle at var(--lg26-x) var(--lg26-y),
+            rgba(224, 242, 255, 0.38) 0%,
+            rgba(108, 175, 255, 0.20) 22%,
+            transparent 72%
+        ),
+        linear-gradient(128deg, rgba(255,255,255,0.14), transparent 42%, rgba(112,177,255,0.10));
+}
+
+@media (hover: hover) and (pointer: fine) {
+    body.dark .lg26-glass-target.lg26-is-active > .lg26-specular-layer,
+    html[data-theme="dark"] .lg26-glass-target.lg26-is-active > .lg26-specular-layer {
+        opacity: 0.78;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .lg26-glass-target,
+    .lg26-glass-target > .lg26-specular-layer {
+        transition: none !important;
+    }
+    .lg26-glass-target.lg26-is-active {
+        transform: none !important;
+    }
+}
+/* LIQUID_GLASS_VISUAL_HOTFIX_V1 */
+.post-entry.lg26-glass-target {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(255, 255, 255, 0.075) 48%,
+        rgba(188, 216, 255, 0.10) 100%) !important;
+    -webkit-backdrop-filter: blur(24px) saturate(1.75) contrast(1.05) !important;
+    backdrop-filter: blur(24px) saturate(1.75) contrast(1.05) !important;
+    border: 1px solid rgba(255, 255, 255, 0.38) !important;
+    border-radius: 22px !important;
+    box-shadow:
+        0 10px 32px rgba(20, 35, 56, 0.11),
+        inset 0 1px 0 rgba(255, 255, 255, 0.58),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.08) !important;
+    transition:
+        transform 240ms cubic-bezier(0.2, 0.75, 0.25, 1),
+        box-shadow 240ms ease,
+        border-color 240ms ease,
+        background 120ms linear !important;
+}
+
+.post-entry.lg26-glass-target:hover {
+    background:
+        radial-gradient(260px circle at var(--lg26-pointer-x, 50%) var(--lg26-pointer-y, 50%),
+            rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0) 72%),
+        linear-gradient(135deg,
+            rgba(255, 255, 255, 0.24) 0%,
+            rgba(255, 255, 255, 0.075) 48%,
+            rgba(188, 216, 255, 0.12) 100%) !important;
+    border-color: rgba(255, 255, 255, 0.70) !important;
+    box-shadow:
+        0 14px 38px rgba(20, 35, 56, 0.16),
+        inset 0 1px 0 rgba(255, 255, 255, 0.78),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.12) !important;
+    transform: translateY(-3px) !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .post-entry.lg26-glass-target,
+    .post-entry.lg26-glass-target:hover {
+        transition: none !important;
+        transform: none !important;
+    }
+}

@@ -1131,3 +1131,205 @@ body [contenteditable="true"] {
     background-color: rgba(119, 180, 255, 0.43);
     text-shadow: 0 0 5px rgba(255, 255, 255, 0.38);
 }
+
+/* 洛谷风格的嵌套折叠框 */
+.post-content .luogu-callout {
+    margin: 1.2rem 0;
+    overflow: hidden;
+    border: 1px solid rgba(151, 188, 235, 0.45);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.26);
+    -webkit-backdrop-filter: blur(18px) saturate(145%);
+    backdrop-filter: blur(18px) saturate(145%);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48);
+}
+
+.luogu-callout__title {
+    padding: 12px 16px;
+    font-weight: 650;
+    color: #29496f;
+    cursor: pointer;
+    background: rgba(205, 226, 253, 0.22);
+}
+
+.luogu-callout__body {
+    padding: 4px 16px 14px;
+}
+
+.luogu-callout__body > :first-child {
+    margin-top: 0.6rem;
+}
+
+.luogu-callout__body > :last-child {
+    margin-bottom: 0;
+}
+
+.luogu-callout--info {
+    border-color: rgba(75, 151, 239, 0.40);
+}
+
+.luogu-callout--success {
+    border-color: rgba(49, 180, 130, 0.42);
+}
+
+.luogu-callout--warning {
+    border-color: rgba(230, 166, 50, 0.48);
+}
+
+.luogu-callout--error {
+    border-color: rgba(231, 91, 116, 0.42);
+}
+
+/* 引言：更接近洛谷的署名引用 */
+.post-content .luogu-epigraph {
+    margin: 0.8rem 0 1.2rem;
+}
+
+.post-content .luogu-epigraph blockquote {
+    margin: 0;
+    padding: 10px 16px;
+    border-inline-start: 2px solid rgba(137, 178, 235, 0.7);
+    border-radius: 0 10px 10px 0;
+    background: rgba(219, 234, 255, 0.22);
+}
+
+.luogu-epigraph figcaption {
+    margin-top: 6px;
+    color: #7187a4;
+    text-align: right;
+    font-size: 0.9em;
+}
+/* 修复 Hugo 代码行号表格的黑色边框 */
+.post-content .highlight table.lntable,
+.post-content .highlight table.lntable tbody,
+.post-content .highlight table.lntable tr,
+.post-content .highlight table.lntable td {
+    border: none !important;
+    outline: none !important;
+}
+
+.post-content .highlight table.lntable {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100%;
+}
+
+.post-content .highlight table.lntable td.lntd {
+    padding: 0 !important;
+    vertical-align: top !important;
+}
+
+/* 行号区与代码区之间使用轻微的半透明分隔线 */
+.post-content .highlight table.lntable td.lntd + td.lntd {
+    border-left: 1px solid rgba(160, 185, 215, 0.22) !important;
+}
+/* 修复 Hugo 代码行号表格的黑色边框 */
+.post-content .highlight table.lntable,
+.post-content .highlight table.lntable tbody,
+.post-content .highlight table.lntable tr,
+.post-content .highlight table.lntable td {
+    border: none !important;
+    outline: none !important;
+}
+
+.post-content .highlight table.lntable {
+    border-collapse: separate !important;
+    border-spacing: 0 !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+    width: 100%;
+}
+
+.post-content .highlight table.lntable td.lntd {
+    padding: 0 !important;
+    vertical-align: top !important;
+}
+
+/* 行号区与代码区之间使用轻微的半透明分隔线 */
+.post-content .highlight table.lntable td.lntd + td.lntd {
+    border-left: 1px solid rgba(160, 185, 215, 0.22) !important;
+}
+
+/* =========================================================
+   Hugo 行号代码块：浅色液态玻璃修复
+   仅影响代码高亮区，不修改普通表格
+   ========================================================= */
+
+.post-content .highlight {
+    margin: 1.4rem 0 !important;
+    padding: 10px !important;
+    overflow-x: auto !important;
+
+    background: rgba(233, 242, 255, 0.42) !important;
+    border: 1px solid rgba(140, 173, 218, 0.38) !important;
+    border-radius: 16px !important;
+
+    box-shadow:
+        0 8px 24px rgba(37, 65, 105, 0.07),
+        inset 0 1px 0 rgba(255, 255, 255, 0.75) !important;
+}
+
+/* 清除 Hugo 高亮器生成的深色背景 */
+.post-content .highlight > div,
+.post-content .highlight .chroma,
+.post-content .highlight table,
+.post-content .highlight tbody,
+.post-content .highlight tr,
+.post-content .highlight td {
+    background: transparent !important;
+    border: 0 !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+/* 行号表格占满代码框 */
+.post-content .highlight table.lntable {
+    width: 100% !important;
+    margin: 0 !important;
+    border-collapse: collapse !important;
+    border-spacing: 0 !important;
+    table-layout: auto !important;
+}
+
+/* 清除行号区和代码区原有的独立卡片效果 */
+.post-content .highlight table.lntable td.lntd {
+    padding-top: 5px !important;
+    padding-bottom: 5px !important;
+    vertical-align: top !important;
+    border-radius: 0 !important;
+}
+
+/* 行号与代码之间保留细分隔线 */
+.post-content .highlight table.lntable td.lntd:first-child {
+    width: 1% !important;
+    padding-right: 12px !important;
+    border-right: 1px solid rgba(115, 149, 194, 0.25) !important;
+    white-space: nowrap !important;
+}
+
+/* 代码区域留出间距 */
+.post-content .highlight table.lntable td.lntd:last-child {
+    padding-left: 12px !important;
+}
+
+/* 取消内部 pre 的背景、边框和重复圆角 */
+.post-content .highlight pre,
+.post-content .highlight pre.chroma,
+.post-content .highlight td pre {
+    margin: 0 !important;
+    padding: 8px 10px !important;
+
+    background: transparent !important;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+
+    overflow: visible !important;
+}
+
+/* 行号使用低对比度灰蓝色 */
+.post-content .highlight .lnt {
+    color: rgba(65, 88, 121, 0.58) !important;
+}

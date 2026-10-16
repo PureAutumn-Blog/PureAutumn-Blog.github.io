@@ -1,4 +1,4 @@
-
+﻿
 <script src="{{ "js/liquid-cursor.min.js" | relURL }}" data-manual defer></script>
 
 <script>
@@ -110,3 +110,71 @@
 <script src="{{ "js/random-shooting-star.js" | relURL }}" defer></script>
 
 <script src="{{ "js/click-star-message.js" | relURL }}" defer></script>
+
+
+<!-- KaTeX 数学公式引擎 -->
+<script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
+    integrity="sha384-cMkvdD8LoxVzGF/RPUKAcvmm49FQ0oxwDF3BGKtDXcEc+T1b2N+teh/OJfpU0jr6"
+    crossorigin="anonymous"></script>
+
+<!-- 自动识别 Markdown 中的公式 -->
+<script
+    defer
+    src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/contrib/auto-render.min.js"
+    integrity="sha384-hCXGrW6PitJEwbkoStFjeJxv+fSOOQKOPbJxSfM6G5sWZjAyWhXiTIIAmQqnlLlh"
+    crossorigin="anonymous"></script>
+
+<script>
+window.addEventListener("load", function () {
+    if (typeof window.renderMathInElement !== "function") {
+        console.error("KaTeX 自动渲染脚本未加载成功");
+        return;
+    }
+
+    document.querySelectorAll(
+        ".post-single .post-content, .post-content"
+    ).forEach(function (content) {
+        if (content.dataset.katexRendered === "true") return;
+
+        window.renderMathInElement(content, {
+            delimiters: [
+                { left: "$$", right: "$$", display: true },
+                { left: "\\[", right: "\\]", display: true },
+                { left: "\\(", right: "\\)", display: false },
+                { left: "$", right: "$", display: false }
+            ],
+            throwOnError: false,
+            strict: "ignore"
+        });
+
+        content.dataset.katexRendered = "true";
+    });
+
+    console.log("KaTeX 公式渲染完成");
+}, { once: true });
+</script>
+
+<!-- LIQUID_GLASS_IOS26_V1 -->
+<!-- Liquid Glass interaction temporarily disabled -->
+
+{{ if .IsHome }}
+
+{{ end }}
+
+{{ if .IsHome }}
+
+{{ end }}
+
+{{ if .IsHome }}
+
+{{ end }}
+
+{{ if .IsHome }}
+
+{{ end }}
+
+{{ if .IsHome }}
+<script defer src="{{ "js/apple-stardust-intro.js" | relURL }}?v=20261016151126455"></script>
+{{ end }}

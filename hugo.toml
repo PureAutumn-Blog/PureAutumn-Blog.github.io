@@ -37,3 +37,15 @@ identifier = "tags"
 name = "标签"
 url = "/tags/"
 weight = 30
+
+[markup.goldmark.extensions.passthrough]
+enable = true
+
+[markup.goldmark.extensions.passthrough.delimiters]
+block = [['\[' , '\]'], ['$$', '$$']]
+inline = [['$', '$'], ['\(', '\)']]
+[markup.goldmark.renderer]
+unsafe = true
+[markup.highlight]
+style = "github"
+noClasses = true
