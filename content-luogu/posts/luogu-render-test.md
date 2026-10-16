@@ -93,32 +93,39 @@ math: true
 {{% /epigraph %}}
 
 
-行内公式：\(a^2+b^2=c^2\)
 
-独立公式：
+## 4. 独立公式
 
-\[
-a^2+b^2=c^2
-\]
 
-另一种独立公式：
 
 $$
-\sum_{i=1}^{n} i=\frac{n(n+1)}{2}
+
+\\sum\_{i=1}^{n}i=\\frac{n(n+1)}{2}
+
 $$
 
 
 
 ## 5. 带行号的代码
 
-```cpp {linenos=table}
+
+
+```cpp {linenos=true}
+
 #include <bits/stdc++.h>
+
 using namespace std;
 
+
+
 int main() {
-    cout << "Hello, world!" << '\n';
-    return 0;
+
+&#x20;   cout << "Hello, Luogu!" << '\\n';
+
+&#x20;   return 0;
+
 }
+
 ```
 
 
@@ -128,6 +135,14 @@ int main() {
 
 
 | 项目 | 结果 |
-| --- | --- |
-| 表格 | 正常 |
-| 公式 | 正常 |
+
+|---|---|
+
+| LaTeX | 正常渲染 |
+
+| 信息框 | 待验证 |
+
+| 代码行号 | 待验证 |
+
+
+

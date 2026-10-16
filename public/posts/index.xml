@@ -6,8 +6,17 @@
     <description>Recent content in Posts on PureAutumn | 蠕动的OIer</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Thu, 15 Oct 2026 23:30:00 +0800</lastBuildDate>
+    <lastBuildDate>Fri, 16 Oct 2026 22:05:00 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Markdown 渲染回归测试：代码块、表格与独立代码</title>
+      <link>http://localhost:1313/posts/markdown-render-regression/</link>
+      <pubDate>Fri, 16 Oct 2026 22:05:00 +0800</pubDate>
+      <guid>http://localhost:1313/posts/markdown-render-regression/</guid>
+      <description>&lt;p&gt;这篇文章用于检查 Hugo + PaperMod 的 Markdown 渲染。重点是&lt;strong&gt;普通代码块、带行号代码块、独立代码、普通表格和宽表格&lt;/strong&gt;。这不是正式文章，可以在测试完成后删除。&lt;/p&gt;
+&lt;h2 id=&#34;1-行内代码&#34;&gt;1. 行内代码&lt;/h2&gt;
+&lt;p&gt;行内代码应该留在当前文字行内，例如 &lt;code&gt;vector&amp;lt;int&amp;gt; a = {1, 2, 3};&lt;/code&gt;，不应该变成整块代码，也不应该出现单独的背景大框。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>洛谷 Markdown 兼容性测试</title>
       <link>http://localhost:1313/posts/luogu-render-test/</link>
