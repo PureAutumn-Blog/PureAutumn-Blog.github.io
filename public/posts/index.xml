@@ -6,8 +6,16 @@
     <description>Recent content in Posts on PureAutumn | 蠕动的OIer</description>
     <generator>Hugo</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 16 Oct 2026 22:05:00 +0800</lastBuildDate>
+    <lastBuildDate>Sun, 18 Oct 2026 19:32:28 +0800</lastBuildDate>
     <atom:link href="http://localhost:1313/posts/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>P17727 [SCP-J 2026] 打印 / print 题解</title>
+      <link>http://localhost:1313/posts/luogu-p17727%E9%A2%98%E8%A7%A3/</link>
+      <pubDate>Sun, 18 Oct 2026 19:32:28 +0800</pubDate>
+      <guid>http://localhost:1313/posts/luogu-p17727%E9%A2%98%E8%A7%A3/</guid>
+      <description>&lt;h2 id=&#34;题目概述&#34;&gt;题目概述&lt;/h2&gt;
+&lt;p&gt;有一只喜欢玩明日方舟的猫，肝舟熬穿了，第二天打印时不小心把第 $k$ 张 $A4$ 纸和倒数第 $k$ 张 $A4$ 纸印到了第 $k$ 张 $A3$ 纸上（第 $i$ 张 $A4$ 纸上有书上的第 $2i-1$ 与 $2i$ 面），她想知道书的第 $m$ 页被印到了哪一张 $A3$ 纸上，但是因为这个猫猫没有上过小学二年级，所以这个问题只能交给上各位上过小学二年级的虫且了（QwQ）。&lt;/p&gt;</description>
+    </item>
     <item>
       <title>Markdown 渲染回归测试：代码块、表格与独立代码</title>
       <link>http://localhost:1313/posts/markdown-render-regression/</link>
@@ -16,50 +24,6 @@
       <description>&lt;p&gt;这篇文章用于检查 Hugo + PaperMod 的 Markdown 渲染。重点是&lt;strong&gt;普通代码块、带行号代码块、独立代码、普通表格和宽表格&lt;/strong&gt;。这不是正式文章，可以在测试完成后删除。&lt;/p&gt;
 &lt;h2 id=&#34;1-行内代码&#34;&gt;1. 行内代码&lt;/h2&gt;
 &lt;p&gt;行内代码应该留在当前文字行内，例如 &lt;code&gt;vector&amp;lt;int&amp;gt; a = {1, 2, 3};&lt;/code&gt;，不应该变成整块代码，也不应该出现单独的背景大框。&lt;/p&gt;</description>
-    </item>
-    <item>
-      <title>洛谷 Markdown 兼容性测试</title>
-      <link>http://localhost:1313/posts/luogu-render-test/</link>
-      <pubDate>Thu, 15 Oct 2026 23:30:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/luogu-render-test/</guid>
-      <description>&lt;h1 id=&#34;洛谷-markdown-测试&#34;&gt;洛谷 Markdown 测试&lt;/h1&gt;
-&lt;p&gt;这是一段普通文字，支持 &lt;strong&gt;加粗&lt;/strong&gt;、&lt;del&gt;删除线&lt;/del&gt;、&lt;code&gt;行内代码&lt;/code&gt; 和行内公式 \(a^2+b^2=c^2\)。&lt;/p&gt;
-&lt;h2 id=&#34;1-信息框&#34;&gt;1. 信息框&lt;/h2&gt;
-&lt;details class=&#34;luogu-callout luogu-callout--info&#34; open&gt;
-&lt;summary class=&#34;luogu-callout__title&#34;&gt;信息测试&lt;/summary&gt;
-&lt;div class=&#34;luogu-callout__body&#34;&gt;
-&lt;p&gt;这是一段信息提示文字。&lt;/p&gt;
-&lt;details class=&#34;luogu-callout luogu-callout--success&#34; open&gt;
-&lt;summary class=&#34;luogu-callout__title&#34;&gt;嵌套成功框&lt;/summary&gt;
-&lt;div class=&#34;luogu-callout__body&#34;&gt;
-&lt;p&gt;嵌套内容也应该正常显示。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/details&gt;
-&lt;/div&gt;
-&lt;/details&gt;
-&lt;h2 id=&#34;2-警告与错误框&#34;&gt;2. 警告与错误框&lt;/h2&gt;
-&lt;details class=&#34;luogu-callout luogu-callout--warning&#34;&gt;
-&lt;summary class=&#34;luogu-callout__title&#34;&gt;警告测试&lt;/summary&gt;
-&lt;div class=&#34;luogu-callout__body&#34;&gt;
-&lt;p&gt;请注意，这里应该出现警告样式。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/details&gt;</description>
-    </item>
-    <item>
-      <title>我的第一篇博客</title>
-      <link>http://localhost:1313/posts/hello-world/</link>
-      <pubDate>Thu, 15 Oct 2026 16:00:00 +0800</pubDate>
-      <guid>http://localhost:1313/posts/hello-world/</guid>
-      <description>&lt;p&gt;你好，世界！&lt;/p&gt;
-&lt;p&gt;这是我的第一篇 Hugo 博客文章。&lt;/p&gt;
-&lt;p&gt;独立公式测试：&lt;/p&gt;
-$$
-\sum_{i=1}^{n} i = \frac{n(n+1)}{2}
-$$&lt;p&gt;另一个公式：&lt;/p&gt;
-\[
-dp_i = \min_{1 \le j &lt; i}
-\left(dp_j + a_i\right)
-\]</description>
     </item>
   </channel>
 </rss>
