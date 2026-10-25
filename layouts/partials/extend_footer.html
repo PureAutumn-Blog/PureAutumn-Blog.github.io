@@ -58,6 +58,26 @@
           window.__paFluidCanvasObserver.observe(document.body, { childList: true, subtree: true });
         }
 
+        // 轻量 fallback：弱 GPU（如核显）跑不动 WebGL 流体时，用纯 CSS 柔光光标替代，零 GPU 模拟开销
+        var softGlow = null;
+        function ensureSoftGlow() {
+          if (softGlow) return;
+          softGlow = document.getElementById('pa-soft-glow');
+          if (softGlow) return;
+          softGlow = document.createElement('div');
+          softGlow.id = 'pa-soft-glow';
+          softGlow.setAttribute('aria-hidden', 'true');
+          softGlow.style.cssText = 'position:fixed;left:0;top:0;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;pointer-events:none;z-index:-1;opacity:0;transition:opacity .35s;background:radial-gradient(circle, rgba(40,120,220,.5), rgba(40,120,220,0) 70%);mix-blend-mode:multiply;will-change:transform;';
+          document.body.appendChild(softGlow);
+        }
+        function enableSoftGlow() {
+          ensureSoftGlow();
+          softGlow.style.opacity = '0.6';
+          window.addEventListener('pointermove', function (e) {
+            if (softGlow) softGlow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
+          }, { passive: true });
+        }
+
         // —— 自适应性能管理器 ——
         // 降级渲染参数：sim/dye 网格分辨率与 dpr 下调，流体为模糊发光效果，
         // 肉眼几乎无差，但每帧 GPU/CPU 负载显著降低（约 60%）。
@@ -67,15 +87,29 @@
           colors: [[0.26,0.56,0.96],[0.32,0.66,1.00],[0.30,0.72,0.96],[0.40,0.62,0.98]]
         };
         var fluidActive = false, fluidLastMove = 0, FLUID_IDLE = 1500;
+        var fluidBanned = false, fluidProbeDone = false;
         function startFluid() {
-          if (fluidActive || document.hidden || typeof window.LiquidCursor !== 'function') return;
+          if (fluidActive || fluidBanned || document.hidden || typeof window.LiquidCursor !== 'function') return;
           var inst;
-          try { inst = window.LiquidCursor(FLUID_OPTS); } catch (e) { return; }
-          if (!inst) return;            // WebGL 不可用：脚本返回 null
+          try { inst = window.LiquidCursor(FLUID_OPTS); } catch (e) { enableSoftGlow(); return; }
+          if (!inst) { enableSoftGlow(); return; }   // WebGL 不可用：降级为 CSS 柔光
           window.__paFluidCursor = inst;
           fluidActive = true;
           fluidLastMove = Date.now();
           applyBlueFilter();
+          // 首段运行帧率实测：弱 GPU（如核显）跑不动则自动禁用并切 CSS 柔光，保证不卡
+          if (!fluidProbeDone) {
+            fluidProbeDone = true;
+            var pStart = performance.now(), pFrames = 0;
+            (function probe(now) {
+              if (!document.hidden) pFrames++;
+              if (now - pStart < 1500) { requestAnimationFrame(probe); }
+              else {
+                var fps = pFrames / ((now - pStart) / 1000);
+                if (fps < 40) { fluidBanned = true; stopFluid(); enableSoftGlow(); }
+              }
+            })(pStart);
+          }
         }
         function stopFluid() {
           if (!fluidActive || !window.__paFluidCursor) return;
@@ -94,10 +128,10 @@
         setInterval(function () {
           if (fluidActive && !document.hidden && (Date.now() - fluidLastMove) > FLUID_IDLE) stopFluid();
         }, 1000);
-        // 切到后台 / 最小化 → 停；回到前台且近期有活动 → 重建
+        // 切到后台 / 最小化 → 停；回到前台且近期有活动且未被性能禁用 → 重建
         document.addEventListener('visibilitychange', function () {
           if (document.hidden) stopFluid();
-          else if ((Date.now() - fluidLastMove) < FLUID_IDLE) startFluid();
+          else if (!fluidBanned && (Date.now() - fluidLastMove) < FLUID_IDLE) startFluid();
         });
         // 首次启动交给指针移动触发（页面加载即空跑无意义）；保留兜底：
         // 若当前已有近期活动则立即启动。
