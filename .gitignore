@@ -14,3 +14,6 @@
 
 # ===== Hugo 资源生成中间文件 =====
 /resources/_gen/
+
+# ===== WorkBuddy 项目记忆（不入库）=====
+.workbuddy/

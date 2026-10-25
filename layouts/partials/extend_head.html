@@ -1,4 +1,21 @@
-﻿<!-- KaTeX 数学公式样式 -->
+﻿<!-- 性能与动效偏好探测：供全站特效门控使用，须最先执行 -->
+<script>
+  window.PA_PERF = (function () {
+    var m = window.matchMedia || function () { return { matches: false }; };
+    var reduced = m('(prefers-reduced-motion: reduce)').matches;
+    var coarse = m('(pointer: coarse)').matches;
+    var cores = navigator.hardwareConcurrency || 8;
+    var mem = navigator.deviceMemory || 8;
+    return {
+      reduced: reduced,
+      coarse: coarse,
+      lowPower: cores <= 4 || mem <= 4,
+      light: reduced || coarse || cores <= 4 || mem <= 4
+    };
+  })();
+</script>
+
+<!-- KaTeX 数学公式样式 -->
 <link
     rel="stylesheet"
     href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css"

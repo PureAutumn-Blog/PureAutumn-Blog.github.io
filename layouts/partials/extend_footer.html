@@ -1,118 +1,85 @@
-﻿
-<script src="{{ "js/liquid-cursor.min.js" | relURL }}" data-manual defer></script>
-
+﻿<!--
+  性能门控加载策略（PA_PERF 已在 extend_head.html 注入）：
+  - reduced  : 系统“减少动效” → 跳过全部动画特效
+  - coarse   : 触摸设备 → 跳过依赖鼠标的流体光标 / 玻璃悬停 / 星尘开场
+  - lowPower : 低端 CPU/内存 → 跳过最耗资源的流体光标（其余轻特效保留）
+  - 轻量交互特效（点击粒子/脉冲/流星/消息）仅在非 reduced 时加载
+-->
 <script>
 (function () {
-    const SVG_NS = "http://www.w3.org/2000/svg";
+  var P = window.PA_PERF || { reduced: false, coarse: false, lowPower: false, light: false };
 
-    function startFluid() {
-        // 创建此前验证成功的蓝色映射滤镜
-        if (!document.getElementById("pa-fluid-filter-defs")) {
-            const svg = document.createElementNS(SVG_NS, "svg");
-            svg.id = "pa-fluid-filter-defs";
-            svg.setAttribute("aria-hidden", "true");
+  function loadScript(src, cb) {
+    var s = document.createElement('script');
+    s.src = src;
+    if (cb) s.onload = cb;
+    s.onerror = function () { /* 静默失败，不阻塞页面 */ };
+    (document.body || document.documentElement).appendChild(s);
+  }
 
-            svg.style.cssText =
-                "position:fixed;width:0;height:0;overflow:hidden;pointer-events:none";
+  // 1) 系统要求减少动效：直接跳过所有动画特效
+  if (P.reduced) return;
 
-            svg.innerHTML = `
-                <defs>
-                    <filter id="pa-fluid-blue-tint"
-                            color-interpolation-filters="sRGB">
-                        <feColorMatrix type="matrix" values="
-                            -0.45 0 0 0 1
-                            0 -0.22 0 0 1
-                            0 0 0 0 1
-                            0 0 0 1 0
-                        "/>
-                    </filter>
-                </defs>
-            `;
+  // 2) 轻量交互特效（事件驱动，触摸与低端设备均可保留）
+  loadScript('{{ "js/purple-click-burst.js" | relURL }}?v=20261025');
+  loadScript('{{ "js/pulsing-cursor.js" | relURL }}?v=20261025');
+  loadScript('{{ "js/random-shooting-star.js" | relURL }}?v=20261025');
+  loadScript('{{ "js/click-star-message.js" | relURL }}?v=20261025');
 
-            document.body.appendChild(svg);
+  // 3) 依赖鼠标的特效（触摸设备无意义，跳过）
+  if (!P.coarse) {
+    // 重：流体光标 —— 仅非低端设备运行
+    if (!P.lowPower) {
+      var lc = document.createElement('script');
+      lc.src = '{{ "js/liquid-cursor.min.js" | relURL }}?v=20261025';
+      lc.setAttribute('data-manual', '');
+      lc.onload = function () {
+        if (typeof window.LiquidCursor !== 'function' || window.__paFluidCursor) return;
+        var SVG_NS = 'http://www.w3.org/2000/svg';
+        if (!document.getElementById('pa-fluid-filter-defs')) {
+          var svg = document.createElementNS(SVG_NS, 'svg');
+          svg.id = 'pa-fluid-filter-defs';
+          svg.setAttribute('aria-hidden', 'true');
+          svg.style.cssText = 'position:fixed;width:0;height:0;overflow:hidden;pointer-events:none';
+          svg.innerHTML = '<defs><filter id="pa-fluid-blue-tint" color-interpolation-filters="sRGB"><feColorMatrix type="matrix" values="-0.45 0 0 0 1  0 -0.22 0 0 1  0 0 0 0 1  0 0 0 1 0"/></filter></defs>';
+          document.body.appendChild(svg);
         }
-
-        // 确保滤镜会应用到流体 Canvas
         function applyBlueFilter() {
-	document.querySelectorAll(
-   		 "canvas:not(#pa-click-fluid)"
-			).forEach(function (canvas) {
-                canvas.style.setProperty(
-                    "filter",
-                    "url(#pa-fluid-blue-tint)",
-                    "important"
-                );
-                canvas.style.setProperty(
-                    "mix-blend-mode",
-                    "multiply",
-                    "important"
-                );
-                canvas.style.setProperty(
-                    "opacity",
-                    "0.65",
-                    "important"
-                );
-            });
+          document.querySelectorAll('canvas:not(#pa-click-fluid)').forEach(function (c) {
+            c.style.setProperty('filter', 'url(#pa-fluid-blue-tint)', 'important');
+            c.style.setProperty('mix-blend-mode', 'multiply', 'important');
+            c.style.setProperty('opacity', '0.65', 'important');
+          });
         }
-
-        // 监听 Canvas 的创建，防止滤镜丢失
         if (!window.__paFluidCanvasObserver) {
-            window.__paFluidCanvasObserver = new MutationObserver(
-                applyBlueFilter
-            );
-
-            window.__paFluidCanvasObserver.observe(document.body, {
-                childList: true,
-                subtree: true
-            });
+          window.__paFluidCanvasObserver = new MutationObserver(applyBlueFilter);
+          window.__paFluidCanvasObserver.observe(document.body, { childList: true, subtree: true });
         }
-
-        // 初始化液体，只初始化一次
-        if (
-            typeof window.LiquidCursor === "function" &&
-            !window.__paFluidCursor
-        ) {
-            window.__paFluidCursor = window.LiquidCursor({
-                gain: 0.16,
-                dyeFade: 0.48,
-                motionFade: 0.30,
-                curl: 3,
-                radius: 0.9,
-                force: 1250,
-                drift: 0,
-                simRes: 128,
-                dyeRes: 512,
-                dpr: 1.25,
-                colors: [
-                    [0.26, 0.56, 0.96],
-                    [0.32, 0.66, 1.00],
-                    [0.30, 0.72, 0.96],
-                    [0.40, 0.62, 0.98]
-                ]
-            });
-        }
-
+        window.__paFluidCursor = window.LiquidCursor({
+          gain: 0.16, dyeFade: 0.48, motionFade: 0.30, curl: 3, radius: 0.9,
+          force: 1250, drift: 0, simRes: 128, dyeRes: 512, dpr: 1.25,
+          colors: [[0.26,0.56,0.96],[0.32,0.66,1.00],[0.30,0.72,0.96],[0.40,0.62,0.98]]
+        });
         applyBlueFilter();
-        requestAnimationFrame(applyBlueFilter);
+      };
+      lc.onerror = function () {};
+      (document.body || document.documentElement).appendChild(lc);
     }
+    // 轻：玻璃悬停（低端机也保留）
+    loadScript('{{ "js/liquid-glass-hover.js" | relURL }}?v=20261025');
+  }
 
-    if (document.readyState === "complete") {
-        startFluid();
-    } else {
-        window.addEventListener("load", startFluid, { once: true });
-    }
+  // 4) 首页星尘开场动画：仅桌面且非低端 / 非减少动效
+  {{ if .IsHome }}
+  if (!P.light) {
+    loadScript('{{ "js/apple-stardust-intro.js" | relURL }}?v=20261025');
+  }
+  {{ end }}
 })();
 </script>
-<script src="{{ "js/purple-click-burst.js" | relURL }}" defer></script>
 
-<script src="{{ "js/pulsing-cursor.js" | relURL }}" defer></script>
-
-<script src="{{ "js/random-shooting-star.js" | relURL }}" defer></script>
-
-<script src="{{ "js/click-star-message.js" | relURL }}" defer></script>
-
-
-<!-- KaTeX 数学公式引擎 -->
+{{ if .IsPage }}
+<!-- KaTeX 数学公式引擎：仅文章详情页按需加载 -->
 <script
     defer
     src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.js"
@@ -155,14 +122,4 @@ window.addEventListener("load", function () {
     console.log("KaTeX 公式渲染完成");
 }, { once: true });
 </script>
-
-<!-- LIQUID_GLASS_IOS26_V1 -->
-<!-- Liquid Glass interaction temporarily disabled -->
-
-{{ if .IsHome }}
-<script defer src="{{ "js/apple-stardust-intro.js?v=20261016213324357" | relURL }}?v=20261016152924622"></script>
 {{ end }}
-
-<!-- LIQUID-GLASS-HOVER-FOOTER-START -->
-<script defer src="{{ "js/liquid-glass-hover.js" | relURL }}?v=20261016204615428"></script>
-<!-- LIQUID-GLASS-HOVER-FOOTER-END -->
