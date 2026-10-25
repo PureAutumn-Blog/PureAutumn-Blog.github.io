@@ -1,0 +1,16 @@
+# ===== Hugo 构建产物（由 GitHub Actions CI 每次重建，无需入库）=====
+/public/
+/content-luogu/
+
+# ===== 调试残留：临时备份 / 禁用副本（不入库；.disabled 文件保留在磁盘备用）=====
+*.bak
+*.bak-*
+*.backup-*
+*.before-*
+*.disabled-*
+
+# ===== Hugo 构建锁文件 =====
+.hugo_build.lock
+
+# ===== Hugo 资源生成中间文件 =====
+/resources/_gen/
