@@ -49,3 +49,11 @@ unsafe = true
 [markup.highlight]
 style = "github"
 noClasses = true
+
+[minify]
+  minifyOutput = true
+  [minify.tdewolff]
+    [minify.tdewolff.css]
+      keepCSSComments = false
+    [minify.tdewolff.html]
+      keepHTMLComments = false
