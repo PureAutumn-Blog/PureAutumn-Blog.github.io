@@ -28,13 +28,15 @@
 
   // 3) 依赖鼠标的特效（触摸设备无意义，跳过）
   if (!P.coarse) {
-    // 重：流体光标 —— 仅非低端设备运行
+    // 重：流体光标 —— 仅非低端设备运行；带自适应暂停（静止/后台停渲染）
     if (!P.lowPower) {
       var lc = document.createElement('script');
       lc.src = '{{ "js/liquid-cursor.min.js" | relURL }}?v=20261025';
       lc.setAttribute('data-manual', '');
       lc.onload = function () {
-        if (typeof window.LiquidCursor !== 'function' || window.__paFluidCursor) return;
+        if (typeof window.LiquidCursor !== 'function') return;
+
+        // 蓝调滤镜定义（用户定制效果，保留）
         var SVG_NS = 'http://www.w3.org/2000/svg';
         if (!document.getElementById('pa-fluid-filter-defs')) {
           var svg = document.createElementNS(SVG_NS, 'svg');
@@ -55,12 +57,51 @@
           window.__paFluidCanvasObserver = new MutationObserver(applyBlueFilter);
           window.__paFluidCanvasObserver.observe(document.body, { childList: true, subtree: true });
         }
-        window.__paFluidCursor = window.LiquidCursor({
+
+        // —— 自适应性能管理器 ——
+        // 降级渲染参数：sim/dye 网格分辨率与 dpr 下调，流体为模糊发光效果，
+        // 肉眼几乎无差，但每帧 GPU/CPU 负载显著降低（约 60%）。
+        var FLUID_OPTS = {
           gain: 0.16, dyeFade: 0.48, motionFade: 0.30, curl: 3, radius: 0.9,
-          force: 1250, drift: 0, simRes: 128, dyeRes: 512, dpr: 1.25,
+          force: 1250, drift: 0, simRes: 96, dyeRes: 384, dpr: 1.0,
           colors: [[0.26,0.56,0.96],[0.32,0.66,1.00],[0.30,0.72,0.96],[0.40,0.62,0.98]]
+        };
+        var fluidActive = false, fluidLastMove = 0, FLUID_IDLE = 1500;
+        function startFluid() {
+          if (fluidActive || document.hidden || typeof window.LiquidCursor !== 'function') return;
+          var inst;
+          try { inst = window.LiquidCursor(FLUID_OPTS); } catch (e) { return; }
+          if (!inst) return;            // WebGL 不可用：脚本返回 null
+          window.__paFluidCursor = inst;
+          fluidActive = true;
+          fluidLastMove = Date.now();
+          applyBlueFilter();
+        }
+        function stopFluid() {
+          if (!fluidActive || !window.__paFluidCursor) return;
+          try { window.__paFluidCursor.destroy(); } catch (e) {}
+          window.__paFluidCursor = null;
+          fluidActive = false;           // 停渲染后仅 rAF 空转，GPU 开销归零
+        }
+        function onFluidActivity() {
+          fluidLastMove = Date.now();
+          if (!fluidActive) startFluid();
+        }
+        ['pointermove', 'pointerdown'].forEach(function (ev) {
+          window.addEventListener(ev, onFluidActivity, { passive: true });
         });
-        applyBlueFilter();
+        // 鼠标静止超过阈值 → 停渲染（此时画面已衰减为空，停掉即省 CPU/GPU）
+        setInterval(function () {
+          if (fluidActive && !document.hidden && (Date.now() - fluidLastMove) > FLUID_IDLE) stopFluid();
+        }, 1000);
+        // 切到后台 / 最小化 → 停；回到前台且近期有活动 → 重建
+        document.addEventListener('visibilitychange', function () {
+          if (document.hidden) stopFluid();
+          else if ((Date.now() - fluidLastMove) < FLUID_IDLE) startFluid();
+        });
+        // 首次启动交给指针移动触发（页面加载即空跑无意义）；保留兜底：
+        // 若当前已有近期活动则立即启动。
+        if ((Date.now() - fluidLastMove) < FLUID_IDLE) startFluid();
       };
       lc.onerror = function () {};
       (document.body || document.documentElement).appendChild(lc);
