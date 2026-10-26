@@ -20,6 +20,27 @@
   // 1) 系统要求减少动效：直接跳过所有动画特效
   if (P.reduced) return;
 
+  // 0) 液态极光背景：纯 CSS 动画（transform/opacity，GPU 合成），核显/低端机/触摸均几乎零 CPU 开销
+  //    仅创建一层固定背景 + 几个渐变光斑，不引入 WebGL，不会复现流体光标的卡顿问题。
+  (function () {
+    if (!document.body) return;
+    var aurora = document.createElement('div');
+    aurora.className = 'pa-aurora';
+    aurora.setAttribute('aria-hidden', 'true');
+    var tints = [
+      'rgba(56,139,253,.45)', 'rgba(45,206,210,.40)', 'rgba(149,128,255,.38)',
+      'rgba(90,200,250,.40)', 'rgba(120,230,200,.32)'
+    ];
+    for (var i = 0; i < tints.length; i++) {
+      var b = document.createElement('span');
+      b.className = 'pa-aurora__blob pa-aurora__blob--' + i;
+      b.style.background = 'radial-gradient(circle at 50% 50%, ' + tints[i] + ', rgba(255,255,255,0) 70%)';
+      aurora.appendChild(b);
+    }
+    document.body.appendChild(aurora);
+    document.body.classList.add('pa-has-aurora');
+  })();
+
   // 2) 轻量交互特效（事件驱动，触摸与低端设备均可保留）
   loadScript('{{ "js/purple-click-burst.js" | relURL }}?v=20261025');
   loadScript('{{ "js/pulsing-cursor.js" | relURL }}?v=20261025');
