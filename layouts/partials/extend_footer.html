@@ -27,14 +27,10 @@
     var aurora = document.createElement('div');
     aurora.className = 'pa-aurora';
     aurora.setAttribute('aria-hidden', 'true');
-    var tints = [
-      'rgba(56,139,253,.45)', 'rgba(45,206,210,.40)', 'rgba(149,128,255,.38)',
-      'rgba(90,200,250,.40)', 'rgba(120,230,200,.32)'
-    ];
-    for (var i = 0; i < tints.length; i++) {
+    // 光斑的颜色 / 尺寸 / 动画全部交给 pa-aurora.css（.pa-aurora__blob--0..4），此处只建结构
+    for (var i = 0; i < 5; i++) {
       var b = document.createElement('span');
       b.className = 'pa-aurora__blob pa-aurora__blob--' + i;
-      b.style.background = 'radial-gradient(circle at 50% 50%, ' + tints[i] + ', rgba(255,255,255,0) 70%)';
       aurora.appendChild(b);
     }
     document.body.appendChild(aurora);
@@ -68,7 +64,8 @@
           document.body.appendChild(svg);
         }
         function applyBlueFilter() {
-          document.querySelectorAll('canvas:not(#pa-click-fluid)').forEach(function (c) {
+          // 排除正在淡出（.pa-fluid-fading）的 canvas，否则会被这里的 opacity 重置，导致淡出失效
+          document.querySelectorAll('canvas:not(#pa-click-fluid):not(.pa-fluid-fading)').forEach(function (c) {
             c.style.setProperty('filter', 'url(#pa-fluid-blue-tint)', 'important');
             c.style.setProperty('mix-blend-mode', 'multiply', 'important');
             c.style.setProperty('opacity', '0.65', 'important');
@@ -91,9 +88,12 @@
           softGlow.style.cssText = 'position:fixed;left:0;top:0;width:260px;height:260px;margin:-130px 0 0 -130px;border-radius:50%;pointer-events:none;z-index:-1;opacity:0;transition:opacity .35s;background:radial-gradient(circle, rgba(40,120,220,.5), rgba(40,120,220,0) 70%);mix-blend-mode:multiply;will-change:transform;';
           document.body.appendChild(softGlow);
         }
+        var softGlowBound = false;
         function enableSoftGlow() {
           ensureSoftGlow();
           softGlow.style.opacity = '0.6';
+          if (softGlowBound) return;          // 只绑定一次，避免重复注册 pointermove
+          softGlowBound = true;
           window.addEventListener('pointermove', function (e) {
             if (softGlow) softGlow.style.transform = 'translate(' + e.clientX + 'px,' + e.clientY + 'px)';
           }, { passive: true });
@@ -107,7 +107,7 @@
           force: 1250, drift: 0, simRes: 96, dyeRes: 384, dpr: 1.0,
           colors: [[0.26,0.56,0.96],[0.32,0.66,1.00],[0.30,0.72,0.96],[0.40,0.62,0.98]]
         };
-        var fluidActive = false, fluidLastMove = 0, FLUID_IDLE = 1500;
+        var fluidActive = false, fluidLastMove = 0, FLUID_IDLE = 2500;
         var fluidBanned = false, fluidProbeDone = false;
         function startFluid() {
           if (fluidActive || fluidBanned || document.hidden || typeof window.LiquidCursor !== 'function') return;
@@ -118,25 +118,50 @@
           fluidActive = true;
           fluidLastMove = Date.now();
           applyBlueFilter();
-          // 首段运行帧率实测：弱 GPU（如核显）跑不动则自动禁用并切 CSS 柔光，保证不卡
+          // 首段运行帧率实测：弱 GPU（如核显）跑不动则自动禁用并切 CSS 柔光，保证不卡。
+          // 关键修复：先预热 700ms 再测，否则会把页面加载/首帧抖动误判成“流体卡顿”，
+          //           导致一动鼠标约 1.5 秒后液体被突兀地一刀切掉。
           if (!fluidProbeDone) {
             fluidProbeDone = true;
-            var pStart = performance.now(), pFrames = 0;
-            (function probe(now) {
-              if (!document.hidden) pFrames++;
-              if (now - pStart < 1500) { requestAnimationFrame(probe); }
-              else {
-                var fps = pFrames / ((now - pStart) / 1000);
-                if (fps < 40) { fluidBanned = true; stopFluid(); enableSoftGlow(); }
-              }
-            })(pStart);
+            setTimeout(function () {
+              if (fluidBanned || document.hidden) { fluidProbeDone = false; return; }
+              if (!fluidActive) { fluidProbeDone = false; return; }
+              var pStart = performance.now(), pFrames = 0, pHidden = false;
+              (function probe(now) {
+                if (document.hidden) { pHidden = true; fluidProbeDone = false; return; }
+                pFrames++;
+                if (now - pStart < 1600) { requestAnimationFrame(probe); }
+                else {
+                  if (pHidden) return;
+                  var fps = pFrames / ((now - pStart) / 1000);
+                  if (fps < 30) { fluidBanned = true; stopFluid(true); enableSoftGlow(); }
+                }
+              })(performance.now());
+            }, 700);
           }
         }
-        function stopFluid() {
+        function stopFluid(graceful) {
           if (!fluidActive || !window.__paFluidCursor) return;
-          try { window.__paFluidCursor.destroy(); } catch (e) {}
+          var inst = window.__paFluidCursor;
           window.__paFluidCursor = null;
-          fluidActive = false;           // 停渲染后仅 rAF 空转，GPU 开销归零
+          fluidActive = false;
+          if (!graceful) { try { inst.destroy(); } catch (e) {} return; }
+          // 优雅淡出：先把 canvas 透明度过渡到 0，再移除，避免“啪”一下凭空消失
+          var cvs = [];
+          document.querySelectorAll('canvas:not(#pa-click-fluid)').forEach(function (c) {
+            if (!c.classList.contains('pa-fluid-fading')) cvs.push(c);
+          });
+          if (!cvs.length) { try { inst.destroy(); } catch (e) {} return; }
+          cvs.forEach(function (c) {
+            c.classList.add('pa-fluid-fading');
+            c.style.transition = 'opacity .8s ease';
+            void c.offsetWidth;                       // 强制回流，确保从当前透明度开始过渡
+            c.style.setProperty('opacity', '0', 'important');
+          });
+          setTimeout(function () {
+            cvs.forEach(function (c) { c.classList.remove('pa-fluid-fading'); });
+            try { inst.destroy(); } catch (e) {}
+          }, 850);
         }
         function onFluidActivity() {
           fluidLastMove = Date.now();
@@ -145,13 +170,13 @@
         ['pointermove', 'pointerdown'].forEach(function (ev) {
           window.addEventListener(ev, onFluidActivity, { passive: true });
         });
-        // 鼠标静止超过阈值 → 停渲染（此时画面已衰减为空，停掉即省 CPU/GPU）
+        // 鼠标静止超过阈值 → 淡出后停渲染（画面已衰减，淡出避免突兀消失）
         setInterval(function () {
-          if (fluidActive && !document.hidden && (Date.now() - fluidLastMove) > FLUID_IDLE) stopFluid();
+          if (fluidActive && !document.hidden && (Date.now() - fluidLastMove) > FLUID_IDLE) stopFluid(true);
         }, 1000);
-        // 切到后台 / 最小化 → 停；回到前台且近期有活动且未被性能禁用 → 重建
+        // 切到后台 / 最小化 → 立即停（不可见，无需淡出）；回到前台且近期有活动且未被性能禁用 → 重建
         document.addEventListener('visibilitychange', function () {
-          if (document.hidden) stopFluid();
+          if (document.hidden) stopFluid(false);
           else if (!fluidBanned && (Date.now() - fluidLastMove) < FLUID_IDLE) startFluid();
         });
         // 首次启动交给指针移动触发（页面加载即空跑无意义）；保留兜底：
