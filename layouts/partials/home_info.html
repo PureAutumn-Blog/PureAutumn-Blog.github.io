@@ -1,0 +1,20 @@
+{{- /*
+  覆盖 PaperMod 的 home_info.html：
+  在「首页信息卡」之前插入 hero（图片分裂 + 打字机）。
+  下方 article 部分与主题原版保持一致，只字未改。
+*/ -}}
+{{- with site.Params.homeInfoParams }}
+{{- partial "pa-hero.html" $ }}
+<article class="first-entry home-info">
+    <header class="entry-header">
+        <h1>{{ .Title | markdownify }}</h1>
+    </header>
+    <div class="entry-content md-content">
+        {{ $opts := dict "display" "block" }}
+        {{ .Content | $.Page.RenderString $opts }}
+    </div>
+    <footer class="entry-footer">
+        {{ partial "social_icons.html" (dict "align" site.Params.homeInfoParams.AlignSocialIconsTo) }}
+    </footer>
+</article>
+{{- end -}}

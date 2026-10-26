@@ -1,0 +1,258 @@
+/* ============================================================
+   首页 Hero：图片纵向分裂 + 打字机
+   - 参考 SimpleMemory 的 bannerImages：一张图纵向切成 N 列，
+     每列显示同一张图的不同窗口；换图时各列错时上下滑入。
+   - 全部动效只用 transform / opacity（GPU 合成），
+     不使用 WebGL，也不产生持续的高频重绘。
+   - 性能分级见 extend_footer.html 的 PA_PERF：
+     reduced  → 不做入场/漂移/换图，只留静态图与静态文案
+     lowPower → 跳过自动换图（其余保留）
+   ============================================================ */
+
+/* 配合 100vw 全幅 hero，避免出现横向滚动条 */
+body {
+    overflow-x: hidden;
+}
+
+.pa-hero {
+    position: relative;
+    width: 100vw;
+    margin-left: calc(50% - 50vw);
+    margin-top: calc(var(--gap) * -1);
+    height: clamp(340px, 58vh, 580px);
+    overflow: hidden;
+    background: #0b1020;
+    border-radius: 0 0 24px 24px;
+    isolation: isolate;
+    /* 文字层垂直居中（切片层是绝对定位，不受影响） */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---------- 切片层 ---------- */
+.pa-hero__slices {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    z-index: 0;
+}
+
+.pa-hero__slice {
+    position: relative;
+    flex: 1 1 0;
+    overflow: hidden;
+    background: #0b1020;
+}
+
+.pa-hero__slice:nth-child(odd) {
+    --pa-dir: -1;
+}
+
+.pa-hero__slice:nth-child(even) {
+    --pa-dir: 1;
+}
+
+/* 极细的分割缝，让"切片"看得见（纯装饰） */
+.pa-hero__slice + .pa-hero__slice::after {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 1px;
+    background: linear-gradient(180deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.18) 28%,
+            rgba(255, 255, 255, 0.18) 72%,
+            rgba(255, 255, 255, 0) 100%);
+    pointer-events: none;
+    z-index: 3;
+}
+
+/* 每列外面套一层：上下各留 6% 余量（换图/位移时不露底）。
+   刻意不做常驻漂移动画 —— 5 层大图持续动画在核显上代价很高。 */
+.pa-hero__drift {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: -6%;
+    bottom: -6%;
+}
+
+/* 关键：每列里放一张"整幅宽"的图，用负偏移错开，
+   于是每列看到的是同一张图的不同纵向窗口 */
+.pa-hero__img {
+    position: absolute;
+    top: 0;
+    left: calc(var(--i) * -100%);
+    width: 500%;
+    height: 100%;
+    /* 主题全局有 img { max-width:100% }，会把 500% 夹回 100% 导致只剩第一列可见 */
+    max-width: none;
+    max-height: none;
+    border-radius: 0;
+    object-fit: cover;
+    object-position: center;
+    pointer-events: none;
+}
+
+/* 盖板：新图初始停在下方，换图时向上滑入盖住旧图 */
+.pa-hero__img--next {
+    transform: translate3d(0, 100%, 0);
+    will-change: transform;
+}
+
+/* ---------- 压暗层：保证白字可读 ---------- */
+.pa-hero__veil {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    pointer-events: none;
+    background:
+        radial-gradient(ellipse 72% 64% at 50% 46%, rgba(6, 10, 22, 0.42), rgba(6, 10, 22, 0) 72%),
+        linear-gradient(180deg, rgba(10, 14, 28, 0.56) 0%, rgba(10, 14, 28, 0.24) 42%, rgba(10, 14, 28, 0.62) 100%);
+}
+
+/* ---------- 内容层 ---------- */
+.pa-hero__inner {
+    position: relative;
+    z-index: 2;
+    width: 100%;
+    max-width: calc(var(--main-width) + var(--gap) * 2);
+    margin: 0 auto;
+    padding: 0 var(--gap);
+    text-align: center;
+    color: #fff;
+    transform: translate3d(0, 0, 0);
+}
+
+.pa-hero__eyebrow {
+    margin: 0 0 0.85rem;
+    font-size: 0.74rem;
+    font-weight: 400;
+    letter-spacing: 0.42em;
+    text-indent: 0.42em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+.pa-hero__title {
+    margin: 0;
+    font-family: Georgia, "Times New Roman", "Songti SC", "Noto Serif SC", serif;
+    font-weight: 700;
+    font-size: clamp(2rem, 6vw, 4rem);
+    line-height: 1.1;
+    letter-spacing: 0.01em;
+    color: #fff;
+    text-shadow: 0 2px 22px rgba(0, 0, 0, 0.55), 0 1px 3px rgba(0, 0, 0, 0.45);
+}
+
+.pa-hero__sub {
+    margin: 1.05rem 0 0;
+    min-height: 1.65em;
+    font-size: clamp(0.9rem, 1.45vw, 1.05rem);
+    letter-spacing: 0.1em;
+    color: rgba(255, 255, 255, 0.92);
+    text-shadow: 0 2px 12px rgba(0, 0, 0, 0.62);
+}
+
+/* 打字光标 */
+.pa-hero__cursor {
+    display: inline-block;
+    width: 0.08em;
+    height: 0.88em;
+    margin-left: 0.08em;
+    vertical-align: -0.06em;
+    background: linear-gradient(180deg, #ffffff, #9fd0ff);
+    box-shadow: 0 0 10px rgba(159, 208, 255, 0.85);
+    animation: pa-hero-caret 1.05s steps(1) infinite;
+}
+
+.pa-hero__title .pa-hero__cursor {
+    height: 0.82em;
+}
+
+/* 标题打完后收起标题光标，只留副标题那一根 */
+.pa-hero__title.is-done .pa-hero__cursor {
+    opacity: 0;
+    animation: none;
+}
+
+/* ---------- 动效 ---------- */
+@keyframes pa-hero-caret {
+
+    0%,
+    49% {
+        opacity: 1;
+    }
+
+    50%,
+    100% {
+        opacity: 0;
+    }
+}
+
+/* 入场：各列从上下错位归位，形成"分裂→合拢" */
+.pa-hero--in .pa-hero__slice {
+    animation: pa-hero-slice-in 1s cubic-bezier(0.22, 1, 0.36, 1) both;
+    animation-delay: calc(var(--i) * 70ms);
+}
+
+@keyframes pa-hero-slice-in {
+    from {
+        transform: translate3d(0, calc(var(--pa-dir, 1) * 10%), 0);
+        opacity: 0.2;
+    }
+
+    to {
+        transform: translate3d(0, 0, 0);
+        opacity: 1;
+    }
+}
+
+.pa-hero--in .pa-hero__inner {
+    animation: pa-hero-text-in 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.28s both;
+}
+
+@keyframes pa-hero-text-in {
+    from {
+        opacity: 0;
+        transform: translate3d(0, 14px, 0);
+    }
+
+    to {
+        opacity: 1;
+        transform: translate3d(0, 0, 0);
+    }
+}
+
+/* ---------- 移动端 ---------- */
+@media (max-width: 640px) {
+    .pa-hero {
+        height: clamp(280px, 46vh, 420px);
+        border-radius: 0 0 18px 18px;
+    }
+
+    .pa-hero__eyebrow {
+        font-size: 0.66rem;
+        letter-spacing: 0.32em;
+        text-indent: 0.32em;
+    }
+
+    .pa-hero__sub {
+        letter-spacing: 0.06em;
+    }
+}
+
+/* ---------- 无障碍：系统要求减少动效 ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    .pa-hero--in .pa-hero__slice,
+    .pa-hero--in .pa-hero__inner,
+    .pa-hero__cursor {
+        animation: none !important;
+    }
+
+    .pa-hero__cursor {
+        opacity: 1;
+    }
+}

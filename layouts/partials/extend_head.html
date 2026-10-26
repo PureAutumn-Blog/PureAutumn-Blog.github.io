@@ -23,6 +23,15 @@
 <!-- 液态极光背景 + 玻璃拟态（纯 CSS，reduced 用户在 extend_footer 不创建极光 DOM） -->
 <link rel="stylesheet" href="{{ "css/pa-aurora.css" | relURL }}?v=20261026">
 
+{{ if .IsHome }}
+<!-- 首页 Hero：图片纵向分裂 + 打字机（仅首页） -->
+<link rel="stylesheet" href="{{ "css/pa-hero.css" | relURL }}?v=20261026">
+<link rel="preload" as="image"
+    href="{{ "images/hero/luotianyi-flame-1920.webp" | relURL }}"
+    imagesrcset="{{ "images/hero/luotianyi-flame-960.webp" | relURL }} 960w, {{ "images/hero/luotianyi-flame-1920.webp" | relURL }} 1920w"
+    imagesizes="100vw">
+{{ end }}
+
 <!-- LIQUID-GLASS-HOVER-HEAD-START -->
 <link rel="stylesheet" href="{{ "css/liquid-glass-hover.css" | relURL }}?v=20261016205600">
 <!-- LIQUID-GLASS-HOVER-HEAD-END -->

@@ -1,0 +1,202 @@
+{{- /*
+  首页 Hero：图片纵向分裂（5 列切片）+ 打字机标题
+  ------------------------------------------------------------
+  · 图片列表在下面 $images 里改；每项对应 static/images/hero/ 下的
+    <base>-960.webp 与 <base>-1920.webp 两个尺寸（srcset 自动选择）。
+  · 换图动效：每隔 FLIP_MS 各列错时向下滑出 / 向上滑入下一张图。
+  · 所有动效仅用 transform / opacity，不用 WebGL；按 PA_PERF 分级：
+      reduced  → 静态图 + 静态文案
+      lowPower → 跳过自动换图
+  · 首页若播放「Apple Hello 星尘开场」（!PA_PERF.light 时才有），
+    则 hero 的入场与打字等开场结束后再开始，避免被黑屏盖住。
+  ------------------------------------------------------------
+  图片来源：洛天依同人壁纸（AlphaCoders，标注「Free For Private, Personal Use」）。
+  仅个人非商用博客使用；如需商用请替换为自己拥有版权的图片。
+*/ -}}
+
+{{- $images := slice
+    (dict "base" "images/hero/luotianyi-flame")
+    (dict "base" "images/hero/luotianyi-snow")
+-}}
+{{- $first := index $images 0 -}}
+
+<section class="pa-hero" id="paHero" aria-label="首页头图">
+    <div class="pa-hero__slices" aria-hidden="true">
+        {{- range $i := seq 0 4 }}
+        <div class="pa-hero__slice" style="--i: {{ $i }};">
+            <span class="pa-hero__drift">
+                <img class="pa-hero__img" data-role="base"
+                    src="{{ printf "%s-1920.webp" $first.base | relURL }}"
+                    srcset="{{ printf "%s-960.webp" $first.base | relURL }} 960w, {{ printf "%s-1920.webp" $first.base | relURL }} 1920w"
+                    sizes="100vw" alt="" decoding="async"
+                    fetchpriority="{{ if eq $i 0 }}high{{ else }}low{{ end }}">
+                <img class="pa-hero__img pa-hero__img--next" data-role="next"
+                    src="{{ printf "%s-1920.webp" $first.base | relURL }}"
+                    srcset="{{ printf "%s-960.webp" $first.base | relURL }} 960w, {{ printf "%s-1920.webp" $first.base | relURL }} 1920w"
+                    sizes="100vw" alt="" decoding="async" fetchpriority="low">
+            </span>
+        </div>
+        {{- end }}
+    </div>
+
+    <div class="pa-hero__veil" aria-hidden="true"></div>
+
+    <div class="pa-hero__inner">
+        <p class="pa-hero__eyebrow">OI · 洛谷 · 题解</p>
+        <h1 class="pa-hero__title" id="paHeroTitleWrap"><span id="paHeroTitle"></span><span
+                class="pa-hero__cursor"></span></h1>
+        <p class="pa-hero__sub"><span id="paHeroSub"></span><span class="pa-hero__cursor"></span></p>
+    </div>
+</section>
+
+<script>
+    (function () {
+        var hero = document.getElementById('paHero');
+        if (!hero) return;
+
+        var P = window.PA_PERF || {};
+        var wrap = document.getElementById('paHeroTitleWrap');
+        var titleEl = document.getElementById('paHeroTitle');
+        var subEl = document.getElementById('paHeroSub');
+        var slices = [].slice.call(hero.querySelectorAll('.pa-hero__slice'));
+        var IMAGES = [
+            {{- range $i, $im := $images }}
+            { s: '{{ printf "%s-960.webp" $im.base | relURL }}', b: '{{ printf "%s-1920.webp" $im.base | relURL }}' }{{ if lt (add $i 1) (len $images) }},{{ end }}
+            {{- end }}
+        ];
+
+        var TITLE = 'PureAutumn';
+        var LINES = [
+            '蠕动的 OIer',
+            '在代码里种一片秋天',
+            '洛谷题解 · 算法笔记'
+        ];
+        var FLIP_MS = 9000;   // 自动换图间隔
+
+        /* ---------- 系统要求减少动效：只给静态文案，不做任何动画 ---------- */
+        if (P.reduced) {
+            titleEl.textContent = TITLE;
+            subEl.textContent = LINES[0];
+            return;
+        }
+
+        /* ---------- 打字机 ---------- */
+        function typeInto(el, text, speed, done) {
+            var i = 0;
+            (function step() {
+                el.textContent = text.slice(0, ++i);
+                if (i < text.length) {
+                    setTimeout(step, document.hidden ? 500 : speed);
+                } else if (done) {
+                    done();
+                }
+            })();
+        }
+
+        function typeTitleAndLines() {
+            typeInto(titleEl, TITLE, 95, function () {
+                if (wrap) wrap.classList.add('is-done');
+                var idx = 0;
+                setTimeout(function loop() {
+                    typeInto(subEl, LINES[idx % LINES.length], 72, function () {
+                        setTimeout(function erase() {
+                            var t = subEl.textContent;
+                            if (!t.length) {
+                                idx++;
+                                return loop();
+                            }
+                            subEl.textContent = t.slice(0, -1);
+                            setTimeout(erase, document.hidden ? 400 : 34);
+                        }, 1900);
+                    });
+                }, 280);
+            });
+        }
+
+        /* ---------- 错时换图（切片分裂转场） ---------- */
+        var cur = 0, flipping = false, timer = null;
+        var STAGGER = 110, DUR = 680;
+        var canFlip = IMAGES.length > 1 && !P.lowPower;
+
+        function applySrc(img, item) {
+            img.srcset = item.s + ' 960w, ' + item.b + ' 1920w';
+            img.src = item.b;
+        }
+
+        function flip() {
+            if (flipping || document.hidden) return;
+            flipping = true;
+            cur = (cur + 1) % IMAGES.length;
+            var next = IMAGES[cur];
+
+            // 新图从下往上盖住旧图（旧图始终在下面），任何时刻都不会出现空档
+            slices.forEach(function (sl, i) {
+                var base = sl.querySelector('[data-role="base"]');
+                var over = sl.querySelector('[data-role="next"]');
+                if (!base || !over) return;
+
+                setTimeout(function () {
+                    applySrc(over, next);
+                    over.style.transition = 'none';
+                    over.style.transform = 'translate3d(0,100%,0)';
+                    void over.offsetHeight;      // 先归位再过渡，避免从上一轮位置滑入
+                    over.style.transition = 'transform ' + DUR + 'ms cubic-bezier(.66,0,.34,1)';
+                    over.style.transform = 'translate3d(0,0,0)';
+
+                    setTimeout(function () {
+                        applySrc(base, next);     // 底板同步成新图
+                        over.style.transition = 'none';
+                        over.style.transform = 'translate3d(0,100%,0)';  // 盖板退回下方待命
+                    }, DUR + 40);
+                }, i * STAGGER);
+            });
+
+            setTimeout(function () { flipping = false; },
+                (slices.length - 1) * STAGGER + DUR + 220);
+        }
+
+        function startCarousel() {
+            if (!canFlip || timer) return;
+            timer = setInterval(flip, FLIP_MS);
+            document.addEventListener('visibilitychange', function () {
+                if (document.hidden) {
+                    clearInterval(timer);
+                    timer = null;
+                } else if (!timer) {
+                    timer = setInterval(flip, FLIP_MS);
+                }
+            });
+            if (window.requestIdleCallback) {
+                requestIdleCallback(function () { new Image().src = IMAGES[1].b; }, { timeout: 3000 });
+            } else {
+                setTimeout(function () { new Image().src = IMAGES[1].b; }, 1500);
+            }
+        }
+
+        /* ---------- 正式开场 ---------- */
+        var started = false;
+        function begin() {
+            if (started) return;
+            started = true;
+            requestAnimationFrame(function () { hero.classList.add('pa-hero--in'); });
+            typeTitleAndLines();
+            startCarousel();
+        }
+
+        /* 等首页星尘开场结束（门控与 extend_footer 的 !P.light 保持一致） */
+        var expectIntro = !P.light;
+        var t0 = Date.now(), seenIntro = false;
+        (function waitIntro() {
+            if (started) return;
+            var el = document.getElementById('apple-stardust-intro');
+            if (el) {
+                seenIntro = true;
+            } else if (!expectIntro || seenIntro) {
+                return begin();               // 开场已结束
+            } else if (Date.now() - t0 > 2500) {
+                return begin();               // 开场脚本没来（弱网或被跳过），不再等
+            }
+            setTimeout(waitIntro, 120);
+        })();
+    })();
+</script>
