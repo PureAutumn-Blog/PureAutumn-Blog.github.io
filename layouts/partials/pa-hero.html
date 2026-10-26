@@ -15,8 +15,8 @@
 */ -}}
 
 {{- $images := slice
-    (dict "base" "images/hero/luotianyi-flame")
-    (dict "base" "images/hero/luotianyi-snow")
+    (dict "base" "images/hero/luotianyi-cosmos" "deep" false "pos" "center 8%")
+    (dict "base" "images/hero/luotianyi-snow" "deep" true "pos" "center top")
 -}}
 {{- $first := index $images 0 -}}
 
@@ -28,18 +28,20 @@
                 <img class="pa-hero__img" data-role="base"
                     src="{{ printf "%s-1920.webp" $first.base | relURL }}"
                     srcset="{{ printf "%s-960.webp" $first.base | relURL }} 960w, {{ printf "%s-1920.webp" $first.base | relURL }} 1920w"
-                    sizes="100vw" alt="" decoding="async"
+                    sizes="100vw" alt="" decoding="async" style="object-position: {{ $first.pos }};"
                     fetchpriority="{{ if eq $i 0 }}high{{ else }}low{{ end }}">
                 <img class="pa-hero__img pa-hero__img--next" data-role="next"
                     src="{{ printf "%s-1920.webp" $first.base | relURL }}"
                     srcset="{{ printf "%s-960.webp" $first.base | relURL }} 960w, {{ printf "%s-1920.webp" $first.base | relURL }} 1920w"
-                    sizes="100vw" alt="" decoding="async" fetchpriority="low">
+                    sizes="100vw" alt="" decoding="async" fetchpriority="low"
+                    style="object-position: {{ $first.pos }};">
             </span>
         </div>
         {{- end }}
     </div>
 
     <div class="pa-hero__veil" aria-hidden="true"></div>
+    <div class="pa-hero__veil pa-hero__veil--deep" aria-hidden="true"></div>
 
     <div class="pa-hero__inner">
         <p class="pa-hero__eyebrow">OI · 洛谷 · 题解</p>
@@ -61,7 +63,7 @@
         var slices = [].slice.call(hero.querySelectorAll('.pa-hero__slice'));
         var IMAGES = [
             {{- range $i, $im := $images }}
-            { s: '{{ printf "%s-960.webp" $im.base | relURL }}', b: '{{ printf "%s-1920.webp" $im.base | relURL }}' }{{ if lt (add $i 1) (len $images) }},{{ end }}
+            { s: '{{ printf "%s-960.webp" $im.base | relURL }}', b: '{{ printf "%s-1920.webp" $im.base | relURL }}', deep: {{ $im.deep }}, pos: '{{ $im.pos }}' }{{ if lt (add $i 1) (len $images) }},{{ end }}
             {{- end }}
         ];
 
@@ -75,6 +77,7 @@
 
         /* ---------- 系统要求减少动效：只给静态文案，不做任何动画 ---------- */
         if (P.reduced) {
+            hero.dataset.deep = IMAGES[0].deep ? '1' : '0';
             titleEl.textContent = TITLE;
             subEl.textContent = LINES[0];
             return;
@@ -121,6 +124,7 @@
         function applySrc(img, item) {
             img.srcset = item.s + ' 960w, ' + item.b + ' 1920w';
             img.src = item.b;
+            if (item.pos) img.style.objectPosition = item.pos;   // 每张图各自的取景高度
         }
 
         function flip() {
@@ -128,6 +132,7 @@
             flipping = true;
             cur = (cur + 1) % IMAGES.length;
             var next = IMAGES[cur];
+            hero.dataset.deep = next.deep ? '1' : '0';   // 浅色图自动加深，保证白字可读
 
             // 新图从下往上盖住旧图（旧图始终在下面），任何时刻都不会出现空档
             slices.forEach(function (sl, i) {
@@ -178,6 +183,7 @@
         function begin() {
             if (started) return;
             started = true;
+            hero.dataset.deep = IMAGES[cur].deep ? '1' : '0';
             requestAnimationFrame(function () { hero.classList.add('pa-hero--in'); });
             typeTitleAndLines();
             startCarousel();
